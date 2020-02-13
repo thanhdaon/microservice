@@ -1,0 +1,10 @@
+FROM golang:1.13-alpine
+
+WORKDIR /app
+
+COPY go.mod /app/go.mod
+COPY go.sum /app/go.sum
+RUN go mod download
+RUN go get github.com/githubnemo/CompileDaemon
+
+ENTRYPOINT CompileDaemon -log-prefix=false -build="go build -o appbin main.go" -command="./appbin"

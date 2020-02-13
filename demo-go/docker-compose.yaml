@@ -1,0 +1,27 @@
+version: "3.5"
+
+services:
+  mongodb:
+    image: "mongo:4.0.16-xenial"
+    environment:
+      - "MONGO_INITDB_ROOT_USERNAME=root"
+      - "MONGO_INITDB_ROOT_PASSWORD=root_password"
+    ports:
+      - "27017:27017"
+    volumes:
+      - "mongo-data:/data/db"
+
+  postgresdb:
+    image: "postgres:9.6-alpine"
+    environment:
+      - "POSTGRES_USER=demo"
+      - "POSTGRES_PASSWORD=demo_password"
+      - "POSTGRES_DB=demo"
+    ports:
+      - "5432:5432"
+    volumes:
+      - "pg-data:/var/lib/postgresql/data"
+
+volumes:
+  mongo-data:
+  pg-data:
