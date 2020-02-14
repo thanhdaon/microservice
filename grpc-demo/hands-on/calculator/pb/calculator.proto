@@ -10,6 +10,11 @@ message SumRequest {
 
 message SumResponse { int32 result = 1; }
 
+message PrimeDecomposeRequest { int32 number = 1; }
+message PrimeDecomposeResponse { int32 result = 1; }
+
 service calculator {
   rpc Sum(SumRequest) returns (SumResponse) {}
+  rpc PrimeDecompose(PrimeDecomposeRequest)
+      returns (stream PrimeDecomposeResponse) {}
 }

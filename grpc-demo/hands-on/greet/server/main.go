@@ -4,6 +4,8 @@ import (
 	"context"
 	"log"
 	"net"
+	"strconv"
+	"time"
 
 	"greet/greetpb"
 
@@ -16,6 +18,18 @@ func (*server) Greet(ctx context.Context, req *greetpb.GreetingRequest) (*greetp
 	firstName := req.GetGreeting().GetFirstName()
 	result := "hello " + firstName
 	return &greetpb.GreetingResponse{Result: result}, nil
+}
+
+func (*server) GreetManyTimes(req *greetpb.GreetManyTimesRequest, stream greetpb.GreetService_GreetManyTimesServer) error {
+	firstName := req.GetGreeting().GetFirstName()
+	for i := 0; i < 10; i++ {
+		res := &greetpb.GreetManyTimesResponse{
+			Result: "Hello " + firstName + strconv.Itoa(i),
+		}
+		stream.Send(res)
+		time.Sleep(1000 * time.Millisecond)
+	}
+	return nil
 }
 
 func main() {
