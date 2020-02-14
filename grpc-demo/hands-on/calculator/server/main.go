@@ -18,6 +18,20 @@ func (*service) Sum(ctx context.Context, req *pb.SumRequest) (*pb.SumResponse, e
 	return &pb.SumResponse{Result: firstNumber + secondNumber}, nil
 }
 
+func (*service) PrimeDecompose(req *pb.PrimeDecomposeRequest, stream pb.Calculator_PrimeDecomposeServer) error {
+	var k int32 = 2
+	num := req.GetNumber()
+	for num > 1 {
+		if num%k == 0 {
+			stream.Send(&pb.PrimeDecomposeResponse{Result: k})
+			num = num / k
+			continue
+		}
+		k = k + 1
+	}
+	return nil
+}
+
 func main() {
 	listener, err := net.Listen("tcp", "0.0.0.0:50051")
 	failOnError(err, "Failed to listen")
