@@ -3,6 +3,7 @@ package main
 import (
 	"calculator/pb"
 	"context"
+	"io"
 	"log"
 	"net"
 
@@ -30,6 +31,32 @@ func (*service) PrimeDecompose(req *pb.PrimeDecomposeRequest, stream pb.Calculat
 		k = k + 1
 	}
 	return nil
+}
+
+func (*service) ComputeAverage(stream pb.Calculator_ComputeAverageServer) error {
+	log.Println("[INFO] ComputeAverate funtion was involed")
+	var nums []int32
+
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return stream.SendAndClose(&pb.ComputeAverageResponse{
+				Result: getAvg(nums),
+			})
+		}
+		failOnError(err, "err while reading client stream")
+		nums = append(nums, req.GetNum())
+	}
+}
+
+func getAvg(nums []int32) float32 {
+	var sum int32 = 0
+	var numCount int = 0
+	for _, num := range nums {
+		sum = sum + num
+		numCount++
+	}
+	return float32(float32(sum) / float32(numCount))
 }
 
 func main() {

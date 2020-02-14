@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"log"
+	"time"
 
 	"calculator/pb"
 
@@ -17,8 +18,9 @@ func main() {
 
 	client := pb.NewCalculatorClient(connection)
 	log.Println("[INFO] client created")
-	doUnary(client)
-	doServerStreaming(client)
+	// doUnary(client)
+	// doServerStreaming(client)
+	doClientStreaming(client)
 }
 
 func doUnary(client pb.CalculatorClient) {
@@ -46,6 +48,22 @@ func doServerStreaming(client pb.CalculatorClient) {
 		failOnError(err, "error while reading stream")
 		log.Printf("[INFO] Response from PrimeDecompose: %v", decomposedNumber.GetResult())
 	}
+}
+
+func doClientStreaming(client pb.CalculatorClient) {
+	log.Println("Starting to do a Client Streaming RPC")
+	nums := []int32{1, 2, 3, 4, 5, 6}
+	stream, err := client.ComputeAverage(context.Background())
+	failOnError(err, "error while calling ComputeAverage")
+	for _, num := range nums {
+		log.Printf("Sending number : %d", num)
+		stream.Send(&pb.ComputeAverageRequest{Num: num})
+		time.Sleep(1000 * time.Millisecond)
+	}
+
+	res, err := stream.CloseAndRecv()
+	failOnError(err, "error while receiving response from ComputeAverage")
+	log.Printf("ComputeAverage response: %v", res)
 }
 
 func failOnError(err error, msg string) {
