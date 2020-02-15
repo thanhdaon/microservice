@@ -20,7 +20,8 @@ func main() {
 	log.Println("[INFO] client created")
 	// doUnary(client)
 	// doServerStreaming(client)
-	doClientStreaming(client)
+	// doClientStreaming(client)
+	doBiDiStreaming(client)
 }
 
 func doUnary(client pb.CalculatorClient) {
@@ -64,6 +65,36 @@ func doClientStreaming(client pb.CalculatorClient) {
 	res, err := stream.CloseAndRecv()
 	failOnError(err, "error while receiving response from ComputeAverage")
 	log.Printf("ComputeAverage response: %v", res)
+}
+
+func doBiDiStreaming(client pb.CalculatorClient) {
+	log.Println("Starting to do a BiDi client Streaming RPC")
+	nums := []int32{1, 5, 3, 6, 2, 20}
+	stream, err := client.FindMax(context.Background())
+	failOnError(err, "error while calling FindMax")
+
+	waitC := make(chan bool)
+	go func() {
+		for _, num := range nums {
+			log.Printf("send num = %d\n", num)
+			stream.Send(&pb.FindMaxRequest{Num: num})
+			time.Sleep(1000 * time.Millisecond)
+		}
+		stream.CloseSend()
+	}()
+
+	go func() {
+		for {
+			res, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			failOnError(err, "error while receiving response")
+			log.Printf("Max = %d\n", res.GetMax())
+		}
+		close(waitC)
+	}()
+	<-waitC
 }
 
 func failOnError(err error, msg string) {

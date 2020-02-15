@@ -16,11 +16,16 @@ message PrimeDecomposeResponse { int32 result = 1; }
 message ComputeAverageRequest { int32 num = 1; }
 message ComputeAverageResponse { float result = 1; }
 
+message FindMaxRequest { int32 num = 1; }
+message FindMaxResponse { int32 max = 1; }
 service calculator {
   rpc Sum(SumRequest) returns (SumResponse) {}
+
   rpc PrimeDecompose(PrimeDecomposeRequest)
       returns (stream PrimeDecomposeResponse) {}
 
   rpc ComputeAverage(stream ComputeAverageRequest)
       returns (ComputeAverageResponse) {}
+
+  rpc FindMax(stream FindMaxRequest) returns (stream FindMaxResponse) {}
 }
