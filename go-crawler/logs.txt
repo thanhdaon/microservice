@@ -1,0 +1,19 @@
+visiting https://caferati.me/
+rafael@caferati.me
+visiting https://caferati.me/portfolio
+rafael@hupples.com
+rafael@caferati.me
+visiting https://caferati.me/labs
+rafael@hupples.com
+rafael@caferati.me
+visiting https://caferati.me/contact
+rafael@caferati.me
+visiting https://caferati.me/portfolio/caferati-me
+rafael@caferati.me
+rafael@hupples.com
+visiting https://caferati.me/demo/react-awesome-button
+visiting https://caferati.me/demo/react-awesome-slider
+visiting https://caferati.me/labs/getelementbyid-javascript-dom-method-performance-comparison
+rafael@caferati.me
+rafael@hupples.com
+Execute time: 1.780067958s
