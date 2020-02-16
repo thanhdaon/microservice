@@ -9,6 +9,7 @@ import (
 	"calculator/pb"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/status"
 )
 
 func main() {
@@ -21,7 +22,8 @@ func main() {
 	// doUnary(client)
 	// doServerStreaming(client)
 	// doClientStreaming(client)
-	doBiDiStreaming(client)
+	// doBiDiStreaming(client)
+	doErrorUnary(client)
 }
 
 func doUnary(client pb.CalculatorClient) {
@@ -95,6 +97,24 @@ func doBiDiStreaming(client pb.CalculatorClient) {
 		close(waitC)
 	}()
 	<-waitC
+}
+
+func doErrorUnary(client pb.CalculatorClient) {
+	log.Printf("Starting to do a SquareRoot RPC...")
+	req := &pb.SquareRootRequest{Number: -10}
+	res, err := client.SquareRoot(context.Background(), req)
+	if err != nil {
+		respErr, ok := status.FromError(err)
+		if ok {
+			// actual error from GRPC (user error)
+			log.Println(respErr.Message())
+			return
+		} else {
+			// framework error
+			failOnError(err, "Big error calling SquareRoot")
+		}
+	}
+	log.Printf("Result of square root of %v: %v\n", 10, res.GetNumberRoot())
 }
 
 func failOnError(err error, msg string) {

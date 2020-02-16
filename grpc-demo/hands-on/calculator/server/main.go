@@ -3,11 +3,15 @@ package main
 import (
 	"calculator/pb"
 	"context"
+	"fmt"
 	"io"
 	"log"
+	"math"
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type service struct{}
@@ -62,6 +66,19 @@ func (*service) FindMax(stream pb.Calculator_FindMaxServer) error {
 		sendErr := stream.Send(&pb.FindMaxResponse{Max: getMax(nums)})
 		failOnError(sendErr, "error when sending data to client")
 	}
+}
+
+func (*service) SquareRoot(ctx context.Context, req *pb.SquareRootRequest) (*pb.SquareRootResponse, error) {
+	log.Println("Received SquareRoot RPC")
+	number := req.GetNumber()
+
+	if number < 0 {
+		return nil, status.Errorf(
+			codes.InvalidArgument,
+			fmt.Sprintf("Received a negative number: %v", number),
+		)
+	}
+	return &pb.SquareRootResponse{NumberRoot: math.Sqrt(float64(number))}, nil
 }
 
 func getMax(nums []int32) int32 {
