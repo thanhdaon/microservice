@@ -1,4 +1,4 @@
-package set
+package utils
 
 var exists = struct{}{}
 

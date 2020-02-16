@@ -2,28 +2,29 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 	"time"
 
-	"email-crawler/pkg/db"
-	"email-crawler/pkg/set"
+	"email-crawler/pkg/database"
+	"email-crawler/pkg/services"
 	"email-crawler/pkg/utils"
 
 	"github.com/gocolly/colly"
 )
 
 func main() {
-	db.Setup()
-	defer db.Close()
-	// crawl("https://caferati.me/")
+	database.Setup()
+	services.Setup()
+	defer database.Close()
+	crawl("https://dantri.com.vn/")
 }
 
 func crawl(url string) {
 	start := time.Now()
-	defer func() {
-		elapsed := time.Since(start)
-		fmt.Printf("Execute time: %s", elapsed)
-	}()
+	defer func(start time.Time) {
+		fmt.Printf("Execute time: %s\n", time.Since(start))
+	}(start)
 
 	re := regexp.MustCompile(`[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}`)
 	allowedDomain := utils.ExtractDomain(url)
@@ -43,14 +44,32 @@ func crawl(url string) {
 	})
 
 	c.OnResponse(func(r *colly.Response) {
-		emails := set.NewSet()
+		emails := utils.NewSet()
 
-		for _, email := range re.FindAll(r.Body, 2) {
-			emails.Add(string(email))
+		for _, emailStr := range re.FindAll(r.Body, 2) {
+			emails.Add(string(emailStr))
 		}
 
-		for email, _ := range emails.Iterator() {
-			fmt.Println(email)
+		var resource database.Resource
+		database.DB.First(&resource, "resource = ?", r.Request.URL.String())
+		if resource.ID == 0 {
+			resource = database.Resource{Resource: r.Request.URL.String()}
+		}
+		for emailStr, _ := range emails.Iterator() {
+			var email database.Email
+			database.DB.First(&email, "email = ?", emailStr)
+			if email.ID == 0 {
+				log.Printf("new email: %s\n", emailStr)
+				email = database.Email{Email: emailStr}
+				email.Resources = append(email.Resources, &resource)
+				database.DB.Create(&email)
+			} else {
+				if email.ResourceCount < 8 {
+					email.ResourceCount = email.ResourceCount + 1
+					database.DB.Save(&email)
+					database.DB.Model(&email).Association("resources").Append(&resource)
+				}
+			}
 		}
 	})
 
