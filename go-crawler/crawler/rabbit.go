@@ -52,17 +52,32 @@ func Start() {
 		nil,                                // args
 	)
 	failOnError(err, "Failed to register a consumer")
-	forever := make(chan bool)
 
 	go func() {
 		for msg := range msgs {
-			log.Printf("Received a message: %s", msg.Body)
+			crawl(string(msg.Body))
 			msg.Ack(false)
 		}
 	}()
 
 	log.Printf(" [*] Waiting for queue: emailsvc-domain-waiting-to-crawl")
-	<-forever
+}
+
+func publishToRabbit(body string) {
+	err := channel.Publish(
+		"",                                 // exchange
+		"emailsvc-domain-waiting-to-crawl", // routing key
+		false,                              // mandatory
+		false,
+		amqp.Publishing{
+			DeliveryMode: amqp.Persistent,
+			ContentType:  "text/plain",
+			Body:         []byte(body),
+		},
+	)
+	if err != nil {
+		log.Printf("Failed to publish! \n%v\n", err)
+	}
 }
 
 func failOnError(err error, msg string) {

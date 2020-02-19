@@ -9,5 +9,10 @@ func main() {
 	crawler.SetupRabbit()
 	defer crawler.CleanupDB()
 	defer crawler.CleanupRabbit()
-	crawler.Start()
+
+	forever := make(chan bool)
+	go crawler.Start()
+	go crawler.Start()
+	go crawler.Start()
+	<-forever
 }
