@@ -1,21 +1,21 @@
 package main
 
 import (
-	"os"
+	"log"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 
 	"rest-gin-gorm/product"
 )
 
-func initDB() *gorm.DB{
-	db, err := gorm.Open("mysql", os.Getenv("DB_URL"))
+func initDB() *gorm.DB {
+	db, err := gorm.Open("postgres", "host=localhost port=5432 user=demo dbname=demo password=password sslmode=disable")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-
+	db.DropTableIfExists(&product.Product{})
 	db.AutoMigrate(&product.Product{})
 
 	return db
@@ -25,7 +25,7 @@ func main() {
 	db := initDB()
 	defer db.Close()
 
-	productAPI := InitProductAPI(db)
+	productAPI := initProductAPI(db)
 
 	r := gin.Default()
 
@@ -35,8 +35,7 @@ func main() {
 	r.PUT("/products/:id", productAPI.Update)
 	r.DELETE("/products/:id", productAPI.Delete)
 
-	err := r.Run()
-	if err != nil {
-		panic(err)
+	if err := r.Run(); err != nil {
+		log.Fatal(err)
 	}
 }
