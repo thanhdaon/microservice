@@ -1,0 +1,43 @@
+version: "3.5"
+
+services:
+  mysql-db:
+    image: "mysql:5.7"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=root_password"
+      - "MYSQL_USER=demo"
+      - "MYSQL_PASSWORD=password"
+      - "MYSQL_DATABASE=demo"
+    ports:
+      - "3306:3306"
+    volumes:
+      - "mysql-data:/var/lib/mysql"
+
+  postgres-db:
+    image: "postgres:9.6-alpine"
+    environment:
+      - "POSTGRES_USER=demo"
+      - "POSTGRES_PASSWORD=password"
+      - "POSTGRES_DB=demo"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+
+  rabbitmq:
+    image: "rabbitmq:3.8.2-management-alpine"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - "rabbit-data:/var/lib/rabbitmq"
+
+volumes:
+  mysql-data:
+  rabbit-data:
+  postgres-data:
