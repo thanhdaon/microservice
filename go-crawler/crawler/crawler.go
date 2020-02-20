@@ -30,7 +30,7 @@ func crawl(url string) {
 
 	c.OnHTML("a[href]", func(e *colly.HTMLElement) {
 		link := e.Request.AbsoluteURL(e.Attr("href"))
-		if extractDomain(link) != allowedDomain {
+		if isUrl(link) && extractDomain(link) != allowedDomain {
 			publishToRabbit(link)
 		}
 		e.Request.Visit(link)
@@ -75,4 +75,9 @@ func extractDomain(link string) string {
 		return ""
 	}
 	return u.Hostname()
+}
+
+func isUrl(str string) bool {
+	u, err := url.Parse(str)
+	return err == nil && u.Scheme != "" && u.Host != ""
 }
