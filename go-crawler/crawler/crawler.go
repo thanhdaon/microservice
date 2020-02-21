@@ -3,7 +3,6 @@ package crawler
 import (
 	"fmt"
 	"log"
-	"net/url"
 	"regexp"
 	"time"
 
@@ -16,8 +15,13 @@ func crawl(url string) {
 		fmt.Printf("Execute time: %s\n", time.Since(start))
 	}(start)
 
-	re := regexp.MustCompile(`[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}`)
+	re := regexp.MustCompile(`[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+`)
 	allowedDomain := extractDomain(url)
+	if allowedDomain == "" {
+		return
+	}
+
+	addDomain(allowedDomain)
 
 	c := colly.NewCollector(
 		colly.MaxDepth(2),
@@ -39,8 +43,10 @@ func crawl(url string) {
 	c.OnResponse(func(r *colly.Response) {
 		emails := NewSet()
 
-		for _, emailStr := range re.FindAll(r.Body, 2) {
-			emails.Add(string(emailStr))
+		for _, found := range re.FindAll(r.Body, 2) {
+			if isValidEmail(string(found)) {
+				emails.Add(string(found))
+			}
 		}
 
 		var resource Resource
@@ -75,9 +81,4 @@ func extractDomain(link string) string {
 		return ""
 	}
 	return u.Hostname()
-}
-
-func isUrl(str string) bool {
-	u, err := url.Parse(str)
-	return err == nil && u.Scheme != "" && u.Host != ""
 }
