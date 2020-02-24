@@ -68,7 +68,7 @@ func main() {
 		fmt.Println("listening on port", *httpAddr)
 		handler := account.NewHTTPServer(ctx, endpoints)
 		errs <- http.ListenAndServe(*httpAddr, handler)
-	}()
+}()
 
 	level.Error(logger).Log("exit", <-errs)
 }
