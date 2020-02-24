@@ -12,7 +12,5 @@ func main() {
 
 	forever := make(chan bool)
 	go crawler.Start()
-	go crawler.Start()
-	go crawler.Start()
 	<-forever
 }
