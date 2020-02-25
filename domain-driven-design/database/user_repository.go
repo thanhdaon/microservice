@@ -1,6 +1,7 @@
 package database
 
 import (
+	"domain-driven-design/domain/e"
 	"domain-driven-design/domain/entity"
 	"domain-driven-design/domain/repository"
 
@@ -15,33 +16,45 @@ func NewUserRepository(db *gorm.DB) repository.UserRepository {
 	return &userRepo{db}
 }
 
-func (r *userRepo) Save(user *entity.User) *entity.User {
+func (r *userRepo) Save(user *entity.User) (*entity.User, error) {
+	var err error
 	if user.ID == 0 {
-		r.db.Create(user)
+		err = r.db.Create(user).Error
 	} else {
-		r.db.Save(user)
+		err = r.db.Save(user).Error
 	}
-	return user
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
-func (r *userRepo) GetByID(id uint64) *entity.User {
+func (r *userRepo) GetByID(id uint64) (*entity.User, error) {
 	var user entity.User
-	if r.db.First(&user, "id = ?", id).RecordNotFound() {
-		return nil
+	if err := r.db.First(&user, "email = ?", id).Error; err != nil {
+		return nil, err
 	}
-	return &user
+	return &user, nil
 }
 
-func (r *userRepo) GetAll() []entity.User {
+func (r *userRepo) GetAll() ([]entity.User, error) {
 	var users []entity.User
-	r.db.Find(&users)
-	return users
+	if err := r.db.Find(&users).Error; err != nil {
+		return users, err
+	}
+	return users, nil
 }
 
-func (r *userRepo) GetByEmail(email string) *entity.User {
+func (r *userRepo) GetByEmail(email string) (*entity.User, error) {
 	var user entity.User
-	if r.db.Where("email = ?", email).Take(&user).RecordNotFound() {
-		return nil
+	err := r.db.Where("email = ?", email).Take(&user).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, e.USER_NOT_FOUND
 	}
-	return &user
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
 }

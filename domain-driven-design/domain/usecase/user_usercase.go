@@ -1,9 +1,9 @@
 package usecase
 
 import (
+	"domain-driven-design/domain/e"
 	"domain-driven-design/domain/helper"
 	"domain-driven-design/domain/repository"
-	"domain-driven-design/pkg/e"
 	"fmt"
 )
 
@@ -21,9 +21,13 @@ type userUsecase struct {
 }
 
 func (uc *userUsecase) Login(email, passwords string) (string, error) {
-	user := uc.UserRepo.GetByEmail(email)
-	if user == nil {
+	user, err := uc.UserRepo.GetByEmail(email)
+	switch err {
+	case nil:
+		return fmt.Sprintf("token-%s-%s", user.FirstName, user.LastName), nil
+	case e.USER_NOT_FOUND:
 		return "", e.USER_NOT_FOUND
+	default:
+		return "", err
 	}
-	return fmt.Sprintf("token-%s-%s", user.FirstName, user.LastName), nil
 }
