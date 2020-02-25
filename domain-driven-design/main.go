@@ -4,6 +4,7 @@ import (
 	"domain-driven-design/database"
 	"domain-driven-design/domain/usecase"
 	"domain-driven-design/pkg/auth"
+
 	"fmt"
 	"log"
 	"os"
@@ -19,12 +20,12 @@ func main() {
 		db       = database.NewDBConnection(DB_DRIVER, DB_CONNECTION_STRING)
 		userRepo = database.NewUserRepository(db)
 
-		authUtil = auth.NewAuthUtil()
+		authHelper = auth.NewAuthHelper()
 
-		userUC = usecase.NewUserUsecase(userRepo)
+		userUC = usecase.NewUserUsecase(userRepo, authHelper)
 	)
 
-	fmt.Println(authUtil, userUC)
+	fmt.Println(userUC.Login("admin@gmail.com", "aaa123"))
 
 	defer db.Close()
 }
