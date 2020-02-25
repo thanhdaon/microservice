@@ -3,40 +3,26 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"net/url"
-
-	"github.com/imroc/req"
+	"time"
 )
 
-type ResponseBody struct {
-	Posts []struct {
-		ID    string `json:"id"`
-		UUID  string `json:"uuid"`
-		Title string `json:"title"`
-	} `json:"posts"`
+func process(ch chan string) {
+	time.Sleep(10500 * time.Millisecond)
+	ch <- "process successful"
 }
 
 func main() {
-	demo3()
-}
-
-func demo1() {
-	resp, err := http.Get("https://trangnhat.net/tin-tuc/ghost/api/v3/content/posts?key=9f1e64bcb6124ed6d38debcc9b&limit=2&field=all")
-	if err != nil {
-		fmt.Println("1")
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Printf("2")
-	}
-
-	var response ResponseBody
-	if json.Unmarshal(body, &response) != nil {
-		fmt.Println("3")
+	ch := make(chan string)
+	go process(ch)
+	for {
+		time.Sleep(1000 * time.Millisecond)
+		select {
+		case v := <-ch:
+			fmt.Println("received value: ", v)
+			return
+		default:
+			fmt.Println("no value received")
+		}
 	}
 
 	for _, post := range response.Posts {
