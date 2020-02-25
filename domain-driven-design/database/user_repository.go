@@ -4,6 +4,7 @@ import (
 	"domain-driven-design/domain/e"
 	"domain-driven-design/domain/entity"
 	"domain-driven-design/domain/repository"
+	"strings"
 
 	"github.com/jinzhu/gorm"
 )
@@ -22,6 +23,10 @@ func (r *userRepo) Save(user *entity.User) (*entity.User, error) {
 		err = r.db.Create(user).Error
 	} else {
 		err = r.db.Save(user).Error
+	}
+
+	if strings.Contains(err.Error(), "duplicate") {
+		return nil, e.EMAIL_ALREADY_EXISTS
 	}
 
 	if err != nil {

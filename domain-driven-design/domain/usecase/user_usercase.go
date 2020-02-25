@@ -2,13 +2,14 @@ package usecase
 
 import (
 	"domain-driven-design/domain/e"
+	"domain-driven-design/domain/entity"
 	"domain-driven-design/domain/helper"
 	"domain-driven-design/domain/repository"
-	"fmt"
 )
 
 type UserUsecase interface {
-	Login(email, password string) (string, error)
+	Signin(email, password string) (token string, err error)
+	Signup(email, password, fistname, lastname string) (*entity.User, error)
 }
 
 func NewUserUsecase(userRepo repository.UserRepository, authHelper helper.Auth) UserUsecase {
@@ -20,14 +21,39 @@ type userUsecase struct {
 	AuthHelper helper.Auth
 }
 
-func (uc *userUsecase) Login(email, passwords string) (string, error) {
+func (uc *userUsecase) Signin(email, password string) (string, error) {
 	user, err := uc.UserRepo.GetByEmail(email)
-	switch err {
-	case nil:
-		return fmt.Sprintf("token-%s-%s", user.FirstName, user.LastName), nil
-	case e.USER_NOT_FOUND:
-		return "", e.USER_NOT_FOUND
-	default:
+	if err != nil {
 		return "", err
 	}
+
+	if err := uc.AuthHelper.VerifyPassword(user.Password, password); err != nil {
+		return "", e.WRONG_PASSWORD
+	}
+
+	token, err := uc.AuthHelper.CreateToken(user.Email)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
+
+func (uc *userUsecase) Signup(email, password, firstname, lastname string) (*entity.User, error) {
+	hashPassword, err := uc.AuthHelper.HashPassword(password)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := uc.UserRepo.Save(&entity.User{
+		Email:     email,
+		Password:  string(hashPassword),
+		FirstName: firstname,
+		LastName:  lastname,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
