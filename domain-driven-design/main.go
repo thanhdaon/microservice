@@ -1,10 +1,10 @@
 package main
 
 import (
-	"domain-driven-design/database"
-	"domain-driven-design/domain/entity"
 	"domain-driven-design/domain/usecase"
 	"domain-driven-design/pkg/auth"
+	"domain-driven-design/pkg/database"
+	"domain-driven-design/pkg/routes/api"
 
 	"log"
 	"os"
@@ -25,11 +25,14 @@ func main() {
 
 		userUC = usecase.NewUserUsecase(userRepo, authHelper)
 	)
+	defer db.Close()
 
-	db.SingularTable(true)
-	// db.DropTableIfExists(&entity.User{})
-	db.AutoMigrate(&entity.User{})
+	api.Setup(api.Dependences{UserUC: userUC})
 
+	TestUserUC(userUC)
+}
+
+func TestUserUC(userUC usecase.UserUsecase) {
 	user, err := userUC.Signup("adminm@gmail.com", "aaa123", "Thanh", "dao")
 	if err != nil {
 		log.Println(err)
@@ -41,6 +44,4 @@ func main() {
 		log.Fatalln(err)
 	}
 	log.Fatalln(token)
-
-	defer db.Close()
 }
