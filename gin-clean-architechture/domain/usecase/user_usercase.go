@@ -7,21 +7,21 @@ import (
 	"domain-driven-design/domain/repository"
 )
 
-type UserUsecase interface {
+type AuthUsecase interface {
 	Signin(email, password string) (token string, err error)
 	Signup(email, password, fistname, lastname string) (*entity.User, error)
 }
 
-func NewUserUsecase(userRepo repository.UserRepository, authHelper helper.Auth) UserUsecase {
-	return &userUsecase{userRepo, authHelper}
+func NewUserUsecase(userRepo repository.UserRepository, authHelper helper.Auth) AuthUsecase {
+	return &authUsecase{userRepo, authHelper}
 }
 
-type userUsecase struct {
+type authUsecase struct {
 	UserRepo   repository.UserRepository
 	AuthHelper helper.Auth
 }
 
-func (uc *userUsecase) Signin(email, password string) (string, error) {
+func (uc *authUsecase) Signin(email, password string) (string, error) {
 	user, err := uc.UserRepo.GetByEmail(email)
 	if err != nil {
 		return "", err
@@ -39,7 +39,7 @@ func (uc *userUsecase) Signin(email, password string) (string, error) {
 	return token, nil
 }
 
-func (uc *userUsecase) Signup(email, password, firstname, lastname string) (*entity.User, error) {
+func (uc *authUsecase) Signup(email, password, firstname, lastname string) (*entity.User, error) {
 	hashPassword, err := uc.AuthHelper.HashPassword(password)
 	if err != nil {
 		return nil, err

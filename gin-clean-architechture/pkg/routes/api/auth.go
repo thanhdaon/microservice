@@ -19,7 +19,7 @@ func Signin(c *gin.Context) {
 		return
 	}
 
-	token, err := userUC.Signin(json.Email, json.Password)
+	token, err := authUC.Signin(json.Email, json.Password)
 	if err != nil {
 		if err == e.WRONG_PASSWORD || err == e.USER_NOT_FOUND {
 			c.JSON(http.StatusOK, response{
@@ -58,7 +58,7 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	user, err := userUC.Signup(json.Email, json.Password, json.FirstName, json.LastName)
+	user, err := authUC.Signup(json.Email, json.Password, json.FirstName, json.LastName)
 	if err != nil {
 		c.JSON(http.StatusOK, response{
 			Ok:   false,

@@ -23,14 +23,14 @@ var (
 
 	authHelper = auth.NewAuthHelper([]byte(JWT_SECRET))
 
-	userUC = usecase.NewUserUsecase(userRepo, authHelper)
+	authUC = usecase.NewUserUsecase(userRepo, authHelper)
 )
 
 func main() {
 	defer db.Close()
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	api.Setup(api.Dependences{UserUC: userUC})
+	api.Setup(api.Dependences{AuthUC: authUC})
 	server := &http.Server{
 		Addr:           ":8000",
 		Handler:        routes.New(),

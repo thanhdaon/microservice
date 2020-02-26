@@ -4,7 +4,7 @@ import (
 	"domain-driven-design/domain/usecase"
 )
 
-var userUC usecase.UserUsecase
+var authUC usecase.AuthUsecase
 
 type response struct {
 	Ok   bool        `json:"ok"`
@@ -13,9 +13,9 @@ type response struct {
 }
 
 type Dependences struct {
-	UserUC usecase.UserUsecase
+	AuthUC usecase.AuthUsecase
 }
 
 func Setup(dependences Dependences) {
-	userUC = dependences.UserUC
+	authUC = dependences.AuthUC
 }
