@@ -9,7 +9,8 @@ import (
 func New() *gin.Engine {
 	r := gin.Default()
 
-	r.POST("/login", api.Login)
+	r.POST("/signin", api.Signin)
+	r.POST("/signup", api.Signup)
 
 	return r
 }

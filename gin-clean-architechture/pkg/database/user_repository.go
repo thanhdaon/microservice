@@ -25,11 +25,10 @@ func (r *userRepo) Save(user *entity.User) (*entity.User, error) {
 		err = r.db.Save(user).Error
 	}
 
-	if strings.Contains(err.Error(), "duplicate") {
-		return nil, e.EMAIL_ALREADY_EXISTS
-	}
-
 	if err != nil {
+		if strings.Contains(err.Error(), "duplicate") {
+			return nil, e.EMAIL_ALREADY_EXISTS
+		}
 		return nil, err
 	}
 

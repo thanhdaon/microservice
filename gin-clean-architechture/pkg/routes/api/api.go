@@ -6,6 +6,12 @@ import (
 
 var userUC usecase.UserUsecase
 
+type response struct {
+	Ok   bool        `json:"ok"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
+}
+
 type Dependences struct {
 	UserUC usecase.UserUsecase
 }
