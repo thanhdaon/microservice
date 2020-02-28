@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-express-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: mongo-express
+  ports:
+    - port: 8081
+      targetPort: 8081
