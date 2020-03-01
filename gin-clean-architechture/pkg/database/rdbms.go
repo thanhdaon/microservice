@@ -20,6 +20,6 @@ func NewDBConnection(dbDriver, dbConnectionString string) *gorm.DB {
 
 func autoMigrate(db *gorm.DB) {
 	db.SingularTable(true)
-	// db.DropTableIfExists(&entity.User{})
+	db.DropTableIfExists(&entity.User{})
 	db.AutoMigrate(&entity.User{})
 }
