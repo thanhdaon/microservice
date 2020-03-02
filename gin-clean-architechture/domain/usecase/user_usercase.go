@@ -5,6 +5,7 @@ import (
 	"domain-driven-design/domain/entity"
 	"domain-driven-design/domain/helper"
 	"domain-driven-design/domain/repository"
+	"time"
 )
 
 type AuthUsecase interface {
@@ -31,7 +32,7 @@ func (uc *authUsecase) Signin(email, password string) (string, error) {
 		return "", e.WRONG_PASSWORD
 	}
 
-	token, err := uc.AuthHelper.CreateToken(user.Email)
+	token, err := uc.AuthHelper.CreateToken(user.Email, 3*time.Hour)
 	if err != nil {
 		return "", err
 	}

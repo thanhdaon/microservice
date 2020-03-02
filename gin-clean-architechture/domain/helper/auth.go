@@ -1,9 +1,13 @@
 package helper
 
-import "github.com/dgrijalva/jwt-go"
+import (
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
+)
 
 type Auth interface {
-	CreateToken(string) (string, error)
+	CreateToken(string, time.Duration) (string, error)
 	ParseToken(string) (*Claims, error)
 	HashPassword(string) ([]byte, error)
 	VerifyPassword(string, string) error

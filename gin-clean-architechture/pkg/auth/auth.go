@@ -16,11 +16,11 @@ type authHelper struct {
 	JwtSecret []byte
 }
 
-func (a *authHelper) CreateToken(email string) (string, error) {
+func (a *authHelper) CreateToken(email string, duration time.Duration) (string, error) {
 	claims := helper.Claims{
 		Email: email,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(3 * time.Hour).Unix(),
+			ExpiresAt: time.Now().Add(duration).Unix(),
 		},
 	}
 
