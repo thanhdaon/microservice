@@ -17,7 +17,7 @@ func NewUserRepository(db *gorm.DB) repository.UserRepository {
 	return &userRepo{db}
 }
 
-func (r *userRepo) Save(user *entity.User) (*entity.User, error) {
+func (r *userRepo) Save(user *entity.User) error {
 	var err error
 	if user.ID == 0 {
 		err = r.db.Create(user).Error
@@ -27,17 +27,17 @@ func (r *userRepo) Save(user *entity.User) (*entity.User, error) {
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate") {
-			return nil, e.EMAIL_ALREADY_EXISTS
+			return e.EMAIL_ALREADY_EXISTS
 		}
-		return nil, err
+		return err
 	}
 
-	return user, nil
+	return nil
 }
 
 func (r *userRepo) GetByID(id uint64) (*entity.User, error) {
 	var user entity.User
-	if err := r.db.First(&user, "email = ?", id).Error; err != nil {
+	if err := r.db.First(&user, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
