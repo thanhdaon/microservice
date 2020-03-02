@@ -3,17 +3,17 @@ package database
 import (
 	"domain-driven-design/domain/entity"
 
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/jinzhu/gorm"
 )
 
-func NewTestDBConnection() *gorm.DB {
-	DB_DRIVER := "postgres"
-	TEST_DB_CONNECTION_STRING := "host=localhost port=5432 user=demo dbname=demo_test password=password sslmode=disable"
-	db := NewDBConnection(DB_DRIVER, TEST_DB_CONNECTION_STRING)
-	db.SingularTable(true)
-	db.DropTableIfExists(&entity.User{})
-	db.AutoMigrate(&entity.User{})
-	return db
+func NewTestDBConnection() *gorm.DB,  {
+	db, mock, _ := sqlmock.New()
+	gormdb, _ := gorm.Open("postgres", db)
+	gormdb.SingularTable(true)
+	gormdb.DropTableIfExists(&entity.User{})
+	gormdb.AutoMigrate(&entity.User{})
+	return gormdb
 }
 
 func seedUser(db *gorm.DB) (*entity.User, error) {

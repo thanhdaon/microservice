@@ -33,6 +33,12 @@ func TestSaveUser_Success(t *testing.T) {
 	assert.Equal(t, u.LastName, "Dao")
 	assert.Equal(t, u.Password, "aaa123")
 
+	user.FirstName = "Thanh-1"
+	u, saveErr = userRepo.Save(user)
+
+	assert.Nil(t, saveErr)
+	assert.Equal(t, u.FirstName, "Thanh-1")
+
 	db.Close()
 }
 
@@ -40,21 +46,57 @@ func TestSaveUser_Fail(t *testing.T) {
 	db := NewTestDBConnection()
 	userRepo := NewUserRepository(db)
 
-	_, err := seedUsers(db)
-	if err != nil {
-		t.Fatalf("want non error, got %#v", err)
-	}
-
-	user := &entity.User{
+	user1 := &entity.User{
 		FirstName: "dao",
 		LastName:  "thanh-1",
 		Email:     "thanhdao@gmail.com",
 		Password:  "aaa123",
 	}
 
+	user2 := &entity.User{
+		FirstName: "dao",
+		LastName:  "thanh-2",
+		Email:     "thanhdao@gmail.com",
+		Password:  "aaa123",
+	}
+
+	_, saveErr := userRepo.Save(user1)
+	_, saveErr = userRepo.Save(user2)
+	assert.Equal(t, e.EMAIL_ALREADY_EXISTS, saveErr)
+
+	db.Close()
+}
+
+func TestGETByID_Success(t *testing.T) {
+	db := NewTestDBConnection()
+	userRepo := NewUserRepository(db)
+
+	user := &entity.User{
+		FirstName: "Thanh",
+		LastName:  "Dao",
+		Email:     "thanhdao@gmail.com",
+		Password:  "aaa123",
+	}
+
 	_, saveErr := userRepo.Save(user)
+	assert.Nil(t, saveErr)
 
-	assert.Equal(t, saveErr, e.EMAIL_ALREADY_EXISTS)
+	u, getErr := userRepo.GetByID(user.ID)
+	assert.Nil(t, getErr)
+	if assert.NotNil(t, u) {
+		assert.Equal(t, u.ID, user.ID)
+	}
 
+	db.Close()
+}
+
+func TestGETByID_Fail(t *testing.T) {
+	db := NewTestDBConnection()
+	userRepo := NewUserRepository(db)
+
+	u, getErr := userRepo.GetByID(1)
+
+	assert.NotNil(t, getErr)
+	assert.Nil(t, u)
 	db.Close()
 }

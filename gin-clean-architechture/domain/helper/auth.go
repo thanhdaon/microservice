@@ -9,7 +9,7 @@ import (
 type Auth interface {
 	CreateToken(string, time.Duration) (string, error)
 	ParseToken(string) (*Claims, error)
-	HashPassword(string) ([]byte, error)
+	HashPassword(string) (string, error)
 	VerifyPassword(string, string) error
 }
 

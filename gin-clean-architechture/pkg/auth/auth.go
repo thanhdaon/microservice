@@ -8,8 +8,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func NewAuthHelper(jwtSecret []byte) helper.Auth {
-	return &authHelper{jwtSecret}
+func NewAuthHelper(jwtSecret string) helper.Auth {
+	return &authHelper{[]byte(jwtSecret)}
 }
 
 type authHelper struct {
@@ -46,8 +46,9 @@ func (a *authHelper) ParseToken(token string) (*helper.Claims, error) {
 	return nil, err
 }
 
-func (authHelper) HashPassword(password string) ([]byte, error) {
-	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+func (authHelper) HashPassword(password string) (string, error) {
+	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(hashed), err
 }
 
 func (authHelper) VerifyPassword(hashedPassword, password string) error {

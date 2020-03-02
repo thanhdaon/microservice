@@ -21,7 +21,7 @@ var (
 	db       = database.NewDBConnection(DB_DRIVER, DB_CONNECTION_STRING)
 	userRepo = database.NewUserRepository(db)
 
-	authHelper = auth.NewAuthHelper([]byte(JWT_SECRET))
+	authHelper = auth.NewAuthHelper(JWT_SECRET)
 
 	authUC = usecase.NewUserUsecase(userRepo, authHelper)
 )
