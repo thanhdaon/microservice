@@ -2,8 +2,6 @@ package crawler
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/gocolly/colly"
@@ -21,15 +19,19 @@ func Crawl(url string) {
 		fmt.Println("visiting", r.URL)
 	})
 
-	c.OnHTML(".pagination-list .pagination-link", func(e *colly.HTMLElement) {
-		index, err := strconv.Atoi(e.Text)
-		if err == nil {
-			e.Request.Visit(makeUrl(index))
-		}
-	})
+	// c.OnHTML(".pagination-list .pagination-link", func(e *colly.HTMLElement) {
+	// 	index, err := strconv.Atoi(e.Text)
+	// 	if err == nil {
+	// 		e.Request.Visit(makeUrl(index))
+	// 	}
+	// })
 
-	c.OnHTML(".company-info__detail a[href]", func(e *colly.HTMLElement) {
-		fmt.Println(strings.TrimSpace(e.Text))
+	// c.OnHTML(".company-info__detail a[href]", func(e *colly.HTMLElement) {
+	// 	fmt.Println(strings.TrimSpace(e.Text))
+	// })
+
+	c.OnResponse(func(r *colly.Response) {
+		fmt.Println(string(r.Body))
 	})
 
 	c.Visit(url)

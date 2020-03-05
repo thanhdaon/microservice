@@ -1,13 +1,13 @@
 package main
 
 import (
+	"email-crawler/crawler"
 	"fmt"
 	"net/url"
 )
 
 func main() {
-	// crawler.Crawl(makeUrl(1))
-	fmt.Println(makeSearchUrl("okok"))
+	crawler.Crawl(makeSearchUrl("okok"))
 }
 
 func makeSearchUrl(keywork string) string {
