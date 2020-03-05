@@ -7,13 +7,13 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func NewTestDBConnection() *gorm.DB,  {
+func NewTestDBConnection() *gorm.DB, sqlmock.Sqlmock {
 	db, mock, _ := sqlmock.New()
 	gormdb, _ := gorm.Open("postgres", db)
 	gormdb.SingularTable(true)
 	gormdb.DropTableIfExists(&entity.User{})
 	gormdb.AutoMigrate(&entity.User{})
-	return gormdb
+	return gormdb, mock
 }
 
 func seedUser(db *gorm.DB) (*entity.User, error) {
