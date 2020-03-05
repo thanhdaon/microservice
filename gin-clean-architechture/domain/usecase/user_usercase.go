@@ -46,15 +46,16 @@ func (uc *authUsecase) Signup(email, password, firstname, lastname string) (*ent
 		return nil, err
 	}
 
-	user, err := uc.UserRepo.Save(&entity.User{
+	newUser := &entity.User{
 		Email:     email,
 		Password:  string(hashPassword),
 		FirstName: firstname,
 		LastName:  lastname,
-	})
-	if err != nil {
+	}
+
+	if err = uc.UserRepo.Save(newUser); err != nil {
 		return nil, err
 	}
 
-	return user, nil
+	return newUser, nil
 }
