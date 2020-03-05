@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/gocolly/colly"
@@ -19,19 +20,8 @@ func Crawl(url string) {
 		fmt.Println("visiting", r.URL)
 	})
 
-	// c.OnHTML(".pagination-list .pagination-link", func(e *colly.HTMLElement) {
-	// 	index, err := strconv.Atoi(e.Text)
-	// 	if err == nil {
-	// 		e.Request.Visit(makeUrl(index))
-	// 	}
-	// })
-
-	// c.OnHTML(".company-info__detail a[href]", func(e *colly.HTMLElement) {
-	// 	fmt.Println(strings.TrimSpace(e.Text))
-	// })
-
-	c.OnResponse(func(r *colly.Response) {
-		fmt.Println(string(r.Body))
+	c.OnHTML(".kCrYT a[href]", func(e *colly.HTMLElement) {
+		fmt.Println(extractLink(e.Attr("href")))
 	})
 
 	c.Visit(url)
@@ -39,4 +29,16 @@ func Crawl(url string) {
 
 func makeUrl(pageIndex int) string {
 	return fmt.Sprintf("https://reviewcongty.com/?tab=latest&page=%d", pageIndex)
+}
+
+func extractLink(urlString string) string {
+	u, err := url.Parse(urlString)
+	if err != nil {
+		return ""
+	}
+	values, err := url.ParseQuery(u.RawQuery)
+	if err != nil {
+		return ""
+	}
+	return values.Get("q")
 }

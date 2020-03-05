@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	crawler.Crawl(makeSearchUrl("okok"))
+	crawler.Crawl(makeSearchUrl("di ve"))
 }
 
 func makeSearchUrl(keywork string) string {
