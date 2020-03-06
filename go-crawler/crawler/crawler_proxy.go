@@ -16,6 +16,10 @@ func CrawlProxy() {
 	c := setupCrawProxy()
 
 	c.Visit("https://www.socks-proxy.net/")
+
+	for _, proxy := range proxies {
+		fmt.Println(proxy)
+	}
 }
 
 func setupCrawProxy() *colly.Collector {
