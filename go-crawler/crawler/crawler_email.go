@@ -37,16 +37,11 @@ func CrawlEmail() {
 	})
 
 	c.OnHTML(".kCrYT a[href]", func(e *colly.HTMLElement) {
-<<<<<<< Updated upstream:go-crawler/crawler/crawler_email.go
 		publishToRabbit(extractLink(e.Attr("href")))
 	})
 
 	c.OnResponse(func(r *colly.Response) {
 		fmt.Println(string(r.Body))
-=======
-		url := extractLink(e.Attr("href"))
-		publishToRabbit(url)
->>>>>>> Stashed changes:go-crawler/crawler/crawler.go
 	})
 
 	data, err := ioutil.ReadFile("log.txt")
