@@ -9,4 +9,5 @@ RUN go build -ldflags="-s -w" -o appbin
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/appbin .
+COPY --from=builder /app/log.txt .
 CMD ["/app/appbin"]

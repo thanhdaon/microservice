@@ -2,6 +2,10 @@ package crawler
 
 import (
 	"log"
+<<<<<<< Updated upstream
+=======
+	"os"
+>>>>>>> Stashed changes
 
 	"github.com/streadway/amqp"
 )
@@ -11,7 +15,11 @@ var channel *amqp.Channel
 
 func SetupRabbit() {
 	var err error
+<<<<<<< Updated upstream
 	rabbitConn, err = amqp.Dial("amqp://congtyio_email_crawler:FQ914bquqmkcW8N5aDhg6qzfIBDNLX8r@congty.io:5672/congtyio_email_crawler")
+=======
+	rabbitConn, err = amqp.Dial(os.Getenv("AMQP_CONNECTION_STRING"))
+>>>>>>> Stashed changes
 	failOnError(err, "Failed to connect to RabbitMQ")
 
 	channel, err = rabbitConn.Channel()
