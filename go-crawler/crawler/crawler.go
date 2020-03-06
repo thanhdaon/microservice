@@ -2,13 +2,17 @@ package crawler
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/gocolly/colly"
+	"github.com/gocolly/colly/proxy"
 )
 
-func Crawl(url string) {
+func Crawl() {
 	start := time.Now()
 	defer func(start time.Time) {
 		fmt.Printf("Execute time: %s\n", time.Since(start))
@@ -16,15 +20,48 @@ func Crawl(url string) {
 
 	c := colly.NewCollector()
 
+	rp, err := proxy.RoundRobinProxySwitcher(
+		"https://www.us-proxy.org/",
+		"https://free-proxy-list.net/anonymous-proxy.html",
+		"https://www.socks-proxy.net/",
+		"https://www.sslproxies.org/",
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	c.SetProxyFunc(rp)
+
 	c.OnRequest(func(r *colly.Request) {
 		fmt.Println("visiting", r.URL)
 	})
 
 	c.OnHTML(".kCrYT a[href]", func(e *colly.HTMLElement) {
-		fmt.Println(extractLink(e.Attr("href")))
+		publishToRabbit(extractLink(e.Attr("href")))
 	})
 
-	c.Visit(url)
+	c.OnResponse(func(r *colly.Response) {
+		fmt.Println(string(r.Body))
+	})
+
+	data, err := ioutil.ReadFile("log.txt")
+	check(err)
+	for _, keyword := range strings.Split(string(data), "\n") {
+		c.Visit(makeSearchUrl(keyword))
+		break
+	}
+}
+
+func check(e error) {
+	if e != nil {
+		log.Fatal(e)
+	}
+}
+
+func makeSearchUrl(keyword string) string {
+	params := url.Values{}
+	params.Add("q", keyword)
+	return fmt.Sprintf("http://www.google.com/search?%s&start=1", params.Encode())
 }
 
 func makeUrl(pageIndex int) string {
