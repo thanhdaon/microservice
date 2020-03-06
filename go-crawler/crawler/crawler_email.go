@@ -12,7 +12,7 @@ import (
 	"github.com/gocolly/colly/proxy"
 )
 
-func Crawl() {
+func CrawlEmail() {
 	start := time.Now()
 	defer func(start time.Time) {
 		fmt.Printf("Execute time: %s\n", time.Since(start))

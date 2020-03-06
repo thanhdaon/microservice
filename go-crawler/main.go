@@ -1,11 +1,7 @@
 package main
 
-import (
-	"email-crawler/crawler"
-)
+import "email-crawler/crawler"
 
 func main() {
-	crawler.SetupRabbit()
-
-	crawler.Crawl()
+	crawler.CrawlProxy()
 }
