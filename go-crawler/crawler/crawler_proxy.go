@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
+	"os"
 	"strings"
 
 	"github.com/gocolly/colly"
@@ -13,13 +13,11 @@ import (
 var proxies []string
 
 func CrawlProxy() {
+	proxies = []string{}
+
 	c := setupCrawProxy()
 
-	c.Visit("https://www.socks-proxy.net/")
-
-	for _, proxy := range proxies {
-		fmt.Println(proxy)
-	}
+	c.Visit("https://free-proxy-list.net/")
 }
 
 func setupCrawProxy() *colly.Collector {
@@ -36,10 +34,18 @@ func setupCrawProxy() *colly.Collector {
 	c.OnHTML("#proxylisttable > tbody > tr", func(e *colly.HTMLElement) {
 		ip := e.ChildText("td:nth-child(1)")
 		port := e.ChildText("td:nth-child(2)")
-		version := e.ChildText("td:nth-child(5)")
+		https := e.ChildText("td:nth-child(7)")
 
-		if proxyOk(ip, port) {
-			proxies = append(proxies, fmt.Sprintf("%s://%s:%s\n", strings.ToLower(version), ip, port))
+		version := "http"
+		if https == "yes" {
+			version = "https"
+		}
+		proxy := fmt.Sprintf("%s://%s:%s\n", strings.ToLower(version), ip, port)
+		if proxyOk(proxy) {
+			fmt.Println("[OK] ", proxy)
+			proxies = append(proxies, proxy)
+		} else {
+			fmt.Println("[FALSE] ", proxy)
 		}
 
 	})
@@ -47,20 +53,18 @@ func setupCrawProxy() *colly.Collector {
 	return c
 }
 
-func proxyOk(ip, port string) bool {
-	host := fmt.Sprintf("%s:%s", ip, port)
-	url_proxy := &url.URL{Host: host}
-	client := &http.Client{
-		Transport: &http.Transport{Proxy: http.ProxyURL(url_proxy)},
-	}
-	resp, err := client.Get("http://err.taobao.com/error1.html")
+func proxyOk(proxy string) bool {
+	return false
+	os.Setenv("HTTP_PROXY", proxy)
+	client := &http.Client{}
+	resp, err := client.Get("http://google.com")
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	if strings.Contains(string(body), "alibaba.com") {
+	if strings.Contains(string(body), "google") {
 		return true
 	}
 	return false
