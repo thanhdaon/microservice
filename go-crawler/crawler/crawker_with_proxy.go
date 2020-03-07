@@ -2,13 +2,13 @@ package crawler
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gocolly/colly"
+	"github.com/gocolly/colly/proxy"
 )
 
 func CrawlerWithProxy() {
-	CrawlProxy()
-
 	c := setupCrawlerWithProxy()
 
 	for i := 0; i < 6; i++ {
@@ -17,9 +17,17 @@ func CrawlerWithProxy() {
 }
 
 func setupCrawlerWithProxy() *colly.Collector {
+	CrawlProxy()
+
 	c := colly.NewCollector(colly.AllowURLRevisit())
 
-	c.SetProxy("http://200.89.174.158:3128")
+	if len(proxies) > 0 {
+		rp, err := proxy.RoundRobinProxySwitcher(proxies...)
+		if err != nil {
+			log.Fatal(err)
+		}
+		c.SetProxyFunc(rp)
+	}
 
 	c.OnRequest(func(r *colly.Request) {
 		fmt.Println("Visiting", r.URL)

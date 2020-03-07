@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
+	"net/url"
 	"strings"
+	"time"
 
 	"github.com/gocolly/colly"
 )
@@ -35,13 +36,13 @@ func setupCrawProxy() *colly.Collector {
 		ip := e.ChildText("td:nth-child(1)")
 		port := e.ChildText("td:nth-child(2)")
 		https := e.ChildText("td:nth-child(7)")
-
-		version := "http"
-		if https == "yes" {
-			version = "https"
+		scheme := "http"
+		if strings.ToLower(https) == "yes" {
+			scheme = "https"
 		}
-		proxy := fmt.Sprintf("%s://%s:%s\n", strings.ToLower(version), ip, port)
-		if proxyOk(proxy) {
+
+		proxy := fmt.Sprintf("%s://%s:%s", scheme, ip, port)
+		if proxyOk(scheme, ip, port) {
 			fmt.Println("[OK] ", proxy)
 			proxies = append(proxies, proxy)
 		} else {
@@ -53,18 +54,20 @@ func setupCrawProxy() *colly.Collector {
 	return c
 }
 
-func proxyOk(proxy string) bool {
-	return false
-	os.Setenv("HTTP_PROXY", proxy)
-	client := &http.Client{}
-	resp, err := client.Get("http://google.com")
+func proxyOk(scheme, ip, port string) bool {
+	host := fmt.Sprintf("%s:%s", ip, port)
+	urlProxy := &url.URL{Scheme: scheme, Host: host}
+	client := &http.Client{
+		Transport: &http.Transport{Proxy: http.ProxyURL(urlProxy)},
+		Timeout:   2 * time.Second,
+	}
+	resp, err := client.Get("https://market.m.taobao.com/app/tbhome/common/error.html")
 	if err != nil {
-		fmt.Println(err)
 		return false
 	}
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	if strings.Contains(string(body), "google") {
+	if strings.Contains(string(body), "taobao") {
 		return true
 	}
 	return false
