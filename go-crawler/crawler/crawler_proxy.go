@@ -55,6 +55,7 @@ func proxyOk(ip, port string) bool {
 	}
 	resp, err := client.Get("http://err.taobao.com/error1.html")
 	if err != nil {
+		fmt.Println(err)
 		return false
 	}
 	defer resp.Body.Close()
