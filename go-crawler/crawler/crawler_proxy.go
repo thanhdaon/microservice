@@ -11,25 +11,17 @@ import (
 	"github.com/gocolly/colly"
 )
 
-var proxies []string
+func CrawlProxy() []string {
+	proxies := []string{}
 
-func CrawlProxy() {
-	proxies = []string{}
-
-	c := setupCrawProxy()
-
-	c.Visit("https://free-proxy-list.net/")
-}
-
-func setupCrawProxy() *colly.Collector {
 	c := colly.NewCollector()
 
 	c.OnRequest(func(r *colly.Request) {
-		fmt.Println("Visiting", r.URL)
+		fmt.Println("[ON REQUEST]", r.URL)
 	})
 
 	c.OnError(func(r *colly.Response, err error) {
-		fmt.Println("[ERROR]", err)
+		fmt.Println("[ON ERROR]", err)
 	})
 
 	c.OnHTML("#proxylisttable > tbody > tr", func(e *colly.HTMLElement) {
@@ -40,18 +32,15 @@ func setupCrawProxy() *colly.Collector {
 		if strings.ToLower(https) == "yes" {
 			scheme = "https"
 		}
-
 		proxy := fmt.Sprintf("%s://%s:%s", scheme, ip, port)
-		if proxyOk(scheme, ip, port) {
-			fmt.Println("[OK] ", proxy)
-			proxies = append(proxies, proxy)
-		} else {
-			fmt.Println("[FALSE] ", proxy)
-		}
-
+		proxies = append(proxies, proxy)
 	})
 
-	return c
+	c.Visit("https://free-proxy-list.net/")
+
+	fmt.Println("[INFO] refresh proxies")
+
+	return proxies
 }
 
 func proxyOk(scheme, ip, port string) bool {
