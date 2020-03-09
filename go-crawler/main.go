@@ -12,5 +12,8 @@ func main() {
 		fmt.Printf("Execute time: %s\n", time.Since(start))
 	}(start)
 
-	crawler.CrawlerWithProxy()
+	crawler.SetupRabbit()
+	// crawler.CrawlGoogle()
+	// crawler.CrawlDuckDuckGo()
+	crawler.CrawlBing()
 }
