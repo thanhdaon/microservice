@@ -16,8 +16,6 @@ func CrawlBing() {
 	for _, keyword := range getCompanyKeywords() {
 		c.Visit(makeBingSearchUrl(keyword))
 	}
-
-	// c.Visit(makeBingSearchUrl("fpt"))
 }
 
 func setupBingCrawler() *colly.Collector {
@@ -34,7 +32,7 @@ func setupBingCrawler() *colly.Collector {
 
 	go func() {
 		for {
-			time.Sleep(5 * time.Minute)
+			time.Sleep(60 * time.Minute)
 			proxies := CrawlProxy()
 			if len(proxies) > 0 {
 				rp, err := proxy.RoundRobinProxySwitcher(proxies...)

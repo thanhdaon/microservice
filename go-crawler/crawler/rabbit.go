@@ -25,7 +25,7 @@ func SetupRabbit() {
 	failOnError(err, "Failed to set QoS")
 
 	_, err = channel.QueueDeclare(
-		"emailsvc-google-search-result", // name
+		"emailsvc-bing-search-result", // name
 		true,                            // durable
 		false,                           // delete when unused
 		false,                           // exclusive
@@ -43,7 +43,7 @@ func CleanupRabbit() {
 func publishToRabbit(body string) {
 	err := channel.Publish(
 		"",                              // exchange
-		"emailsvc-google-search-result", // routing key
+		"emailsvc-bing-search-result", // routing key
 		false,                           // mandatory
 		false,
 		amqp.Publishing{

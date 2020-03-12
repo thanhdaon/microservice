@@ -13,7 +13,5 @@ func main() {
 	}(start)
 
 	crawler.SetupRabbit()
-	// crawler.CrawlGoogle()
-	// crawler.CrawlDuckDuckGo()
 	crawler.CrawlBing()
 }

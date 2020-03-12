@@ -4,10 +4,10 @@ COPY go.mod /app/go.mod
 COPY go.sum /app/go.sum
 RUN go mod download
 COPY . .
-RUN go build -ldflags="-s -w" -o appbin
+RUN go build -ldflags="-s -w" -o appbin cmd/crawl_ping.go
 
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/appbin .
-COPY --from=builder /app/log.txt .
+COPY --from=builder /app/company.txt .
 CMD ["/app/appbin"]
