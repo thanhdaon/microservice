@@ -26,21 +26,31 @@ func SetupRabbit() {
 
 	_, err = channel.QueueDeclare(
 		"emailsvc-bing-search-result", // name
-		true,                            // durable
-		false,                           // delete when unused
-		false,                           // exclusive
-		false,                           // no-wait
-		nil,                             // arguments
+		true,                          // durable
+		false,                         // delete when unused
+		false,                         // exclusive
+		false,                         // no-wait
+		nil,                           // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
 
 	_, err = channel.QueueDeclare(
 		"emailsvc-js-based-website", // name
-		true,                            // durable
-		false,                           // delete when unused
-		false,                           // exclusive
-		false,                           // no-wait
-		nil,                             // arguments
+		true,                        // durable
+		false,                       // delete when unused
+		false,                       // exclusive
+		false,                       // no-wait
+		nil,                         // arguments
+	)
+	failOnError(err, "Failed to declare a queue")
+
+	_, err = channel.QueueDeclare(
+		"demo-backup", // name
+		true,          // durable
+		false,         // delete when unused
+		false,         // exclusive
+		false,         // no-wait
+		nil,           // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
 }
@@ -52,9 +62,9 @@ func CleanupRabbit() {
 
 func publishToRabbit(body string) {
 	err := channel.Publish(
-		"",                              // exchange
+		"",                            // exchange
 		"emailsvc-bing-search-result", // routing key
-		false,                           // mandatory
+		false,                         // mandatory
 		false,
 		amqp.Publishing{
 			DeliveryMode: amqp.Persistent,
