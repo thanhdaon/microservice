@@ -33,6 +33,16 @@ func SetupRabbit() {
 		nil,                             // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
+
+	_, err = channel.QueueDeclare(
+		"emailsvc-js-based-website", // name
+		true,                            // durable
+		false,                           // delete when unused
+		false,                           // exclusive
+		false,                           // no-wait
+		nil,                             // arguments
+	)
+	failOnError(err, "Failed to declare a queue")
 }
 
 func CleanupRabbit() {
