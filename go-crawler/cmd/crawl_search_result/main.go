@@ -10,5 +10,9 @@ func main() {
 	defer crawler.CleanupDB()
 	defer crawler.CleanupRabbit()
 
+	forever := make(chan bool)
 	crawler.CrawlEmailFromSearchResult()
+	crawler.CrawlEmailFromSearchResult()
+	crawler.CrawlEmailFromSearchResult()
+	<-forever
 }

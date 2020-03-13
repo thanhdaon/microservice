@@ -22,34 +22,32 @@ func CrawlEmailFromSearchResult() {
 	)
 	failOnError(err, "Failed to register a consumer")
 
-	forever := make(chan bool)
-
 	go func() {
 		for msg := range msgs {
 			log.Printf("Received a message: %s", msg.Body)
 			crawlEmailFromSearchResult(string(msg.Body))
+			log.Printf("Proccessed a message: %s", msg.Body)
 			msg.Ack(false)
 		}
 	}()
 
-	log.Printf(" [*] Waiting for queue |%s|.\n", BING_SEARCH_RESULT_QUEUE)
-	<-forever
 }
 
 func crawlEmailFromSearchResult(url string) {
 	if isResourceExist(url) {
-		fmt.Println("Resource exist")
+		log.Println("Resource exist")
 		return
 	}
 
 	domain, err := getDomain(url)
 	if err != nil {
-		fmt.Println("fail when get domain")
+		log.Println("fail when get domain")
 		return
 	}
 
 	if isJsRenderingWebsite(url) {
 		publishToRabbit(url, JS_BASED_WEBSITE_QUEUE)
+		log.Println("JS rendering website")
 		return
 	}
 
