@@ -61,7 +61,7 @@ func setupCrawlerWithProxy() *colly.Collector {
 	})
 
 	c.OnHTML(".kCrYT a[href]", func(e *colly.HTMLElement) {
-		publishToRabbit(extractLinkFromGoogleResult(e.Attr("href")))
+		publishToRabbit(extractLinkFromGoogleResult(e.Attr("href")), "emailsvc-google-search-result")
 	})
 
 	return c

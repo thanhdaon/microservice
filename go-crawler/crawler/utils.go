@@ -37,16 +37,10 @@ func getCompanyKeywords() []string {
 	return strings.Split(string(data), "\n")
 }
 
-func IsJsRenderingWebsite(link string) bool {
-	domain, err := getDomain(link)
-	if err != nil {
-		return false
-	}
-
+func isJsRenderingWebsite(domain string) bool {
 	isFacebook := strings.Contains(domain, "facebook")
 	isLinkedin := strings.Contains(domain, "linkedin")
 	isTwitter := strings.Contains(domain, "twitter")
-
 	return isFacebook || isLinkedin || isTwitter
 }
 

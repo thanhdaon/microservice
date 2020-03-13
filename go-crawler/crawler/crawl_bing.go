@@ -55,7 +55,7 @@ func setupBingCrawler() *colly.Collector {
 
 	c.OnHTML(".b_algo h2 a[href]", func(e *colly.HTMLElement) {
 		fmt.Println("[SUCCESS] ", e.Attr("href"))
-		publishToRabbit(e.Attr("href"))
+		publishToRabbit(e.Attr("href"), "emailsvc-bing-search-result")
 	})
 
 	return c

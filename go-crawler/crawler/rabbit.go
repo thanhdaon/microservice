@@ -6,8 +6,15 @@ import (
 	"github.com/streadway/amqp"
 )
 
-var rabbitConn *amqp.Connection
-var channel *amqp.Channel
+var (
+	rabbitConn *amqp.Connection
+	channel    *amqp.Channel
+)
+
+const (
+	BING_SEARCH_RESULT_QUEUE = "emailsvc-bing-search-result"
+	JS_BASED_WEBSITE_QUEUE   = "emailsvc-js-based-website"
+)
 
 func SetupRabbit() {
 	var err error
@@ -25,32 +32,22 @@ func SetupRabbit() {
 	failOnError(err, "Failed to set QoS")
 
 	_, err = channel.QueueDeclare(
-		"emailsvc-bing-search-result", // name
-		true,                          // durable
-		false,                         // delete when unused
-		false,                         // exclusive
-		false,                         // no-wait
-		nil,                           // arguments
+		BING_SEARCH_RESULT_QUEUE, // name
+		true,                     // durable
+		false,                    // delete when unused
+		false,                    // exclusive
+		false,                    // no-wait
+		nil,                      // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
 
 	_, err = channel.QueueDeclare(
-		"emailsvc-js-based-website", // name
-		true,                        // durable
-		false,                       // delete when unused
-		false,                       // exclusive
-		false,                       // no-wait
-		nil,                         // arguments
-	)
-	failOnError(err, "Failed to declare a queue")
-
-	_, err = channel.QueueDeclare(
-		"demo-backup", // name
-		true,          // durable
-		false,         // delete when unused
-		false,         // exclusive
-		false,         // no-wait
-		nil,           // arguments
+		JS_BASED_WEBSITE_QUEUE, // name
+		true,                   // durable
+		false,                  // delete when unused
+		false,                  // exclusive
+		false,                  // no-wait
+		nil,                    // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
 }
@@ -60,11 +57,11 @@ func CleanupRabbit() {
 	channel.Close()
 }
 
-func publishToRabbit(body string) {
+func publishToRabbit(body, queue string) {
 	err := channel.Publish(
-		"",                            // exchange
-		"emailsvc-bing-search-result", // routing key
-		false,                         // mandatory
+		"",    // exchange
+		queue, // routing key
+		false, // mandatory
 		false,
 		amqp.Publishing{
 			DeliveryMode: amqp.Persistent,
