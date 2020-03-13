@@ -1,12 +1,11 @@
 package database
 
 import (
-	"domain-driven-design/domain/e"
 	"domain-driven-design/domain/entity"
+	"domain-driven-design/domain/errors"
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"gopkg.in/go-playground/assert.v1"
 )
 
 var (
@@ -67,7 +66,7 @@ func Test_SaveUser_Fail(t *testing.T) {
 
 	err := userRepo.Save(user1)
 	err = userRepo.Save(user3)
-	assert.Equal(t, e.EMAIL_ALREADY_EXISTS, err)
+	require.Equal(t, true, errors.Is(errors.KindEmailAdreadyExsit, err) )
 
 	db.Delete(user1)
 	db.Delete(user3)
@@ -126,7 +125,7 @@ func Test_GetByEmail(t *testing.T) {
 
 	u, err = userRepo.GetByEmail("okk")
 	require.Nil(t, u)
-	require.Equal(t, e.USER_NOT_FOUND, err)
+	require.Equal(t, true, errors.Is(errors.KindUserNotFound, err))
 
 	db.Delete(user1)
 }

@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"domain-driven-design/domain/e"
 	"domain-driven-design/domain/entity"
+	"domain-driven-design/domain/errors"
 	"domain-driven-design/domain/helper"
 	"domain-driven-design/domain/repository"
 	"time"
@@ -23,13 +23,15 @@ type authUsecase struct {
 }
 
 func (uc *authUsecase) Signin(email, password string) (string, error) {
+	var op errors.Op = "usecase.signin"
+
 	user, err := uc.UserRepo.GetByEmail(email)
 	if err != nil {
-		return "", err
+		return "", errors.E(op, err)
 	}
 
 	if err := uc.AuthHelper.VerifyPassword(user.Password, password); err != nil {
-		return "", e.WRONG_PASSWORD
+		return "", errors.E(op, errors.KindWrongPassword, err)
 	}
 
 	token, err := uc.AuthHelper.CreateToken(user.Email, 3*time.Hour)

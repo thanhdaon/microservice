@@ -1,8 +1,8 @@
 package database
 
 import (
-	"domain-driven-design/domain/e"
 	"domain-driven-design/domain/entity"
+	"domain-driven-design/domain/errors"
 	"domain-driven-design/domain/repository"
 	"strings"
 
@@ -18,6 +18,8 @@ func NewUserRepository(db *gorm.DB) repository.UserRepository {
 }
 
 func (r *userRepo) Save(user *entity.User) error {
+	var op errors.Op = "userRepo.save"
+
 	var err error
 	if user.ID == 0 {
 		err = r.db.Create(user).Error
@@ -27,9 +29,9 @@ func (r *userRepo) Save(user *entity.User) error {
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate") {
-			return e.EMAIL_ALREADY_EXISTS
+			return errors.E(op, errors.KindEmailAdreadyExsit, err)
 		}
-		return err
+		return errors.E(op, err)
 	}
 
 	return nil
@@ -52,13 +54,16 @@ func (r *userRepo) GetAll() ([]entity.User, error) {
 }
 
 func (r *userRepo) GetByEmail(email string) (*entity.User, error) {
+	var op errors.Op = "userRepo.GetByEmail"
+
 	var user entity.User
 	err := r.db.Where("email = ?", email).Take(&user).Error
 	if gorm.IsRecordNotFoundError(err) {
-		return nil, e.USER_NOT_FOUND
+		return nil, errors.E(op, errors.KindUserNotFound, err)
 	}
+
 	if err != nil {
-		return nil, err
+		return nil, errors.E(op, err)
 	}
 	return &user, nil
 }

@@ -1,7 +1,7 @@
 package api
 
 import (
-	"domain-driven-design/domain/e"
+	"domain-driven-design/domain/errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +21,7 @@ func Signin(c *gin.Context) {
 
 	token, err := authUC.Signin(json.Email, json.Password)
 	if err != nil {
-		if err == e.WRONG_PASSWORD || err == e.USER_NOT_FOUND {
+		if errors.Is(errors.KindWrongPassword, err) || errors.Is(errors.KindUserNotFound, err) {
 			c.JSON(http.StatusOK, response{
 				Ok:   false,
 				Msg:  err.Error(),
@@ -67,6 +67,7 @@ func Signup(c *gin.Context) {
 		})
 		return
 	}
+	
 	c.JSON(http.StatusOK, response{
 		Ok:   true,
 		Msg:  "",
