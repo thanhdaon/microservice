@@ -1,7 +1,11 @@
 const puppeteer = require("puppeteer");
 
 async function run() {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    executablePath: "/usr/bin/chromium-browser",
+    args: ["--disable-dev-shm-usage", "--no-sandbox"]
+  });
+
   const page = await browser.newPage();
   await page.goto("https://www.linkedin.com/login");
   await page.type("#username", "daongocthanh98hy@gmail.com");
