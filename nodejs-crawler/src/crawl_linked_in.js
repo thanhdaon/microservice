@@ -1,10 +1,14 @@
 const puppeteer = require("puppeteer");
 
 async function run() {
-  const browser = await puppeteer.launch({
-    executablePath: "/usr/bin/chromium-browser",
-    args: ["--disable-dev-shm-usage", "--no-sandbox"]
-  });
+  const options =
+    process.env.NODE_ENV === "dev"
+      ? {}
+      : {
+          executablePath: "/usr/bin/chromium-browser",
+          args: ["--disable-dev-shm-usage", "--no-sandbox"]
+        };
+  const browser = await puppeteer.launch(options);
 
   const page = await browser.newPage();
   await page.goto("https://www.linkedin.com/login");
@@ -12,6 +16,7 @@ async function run() {
   await page.type("#password", "daongocthanh98");
   await page.click("[type=submit]");
   await page.waitFor(3000);
+  await page.screenshot({ path: "static/3.png" });
   await page.goto(
     "https://www.linkedin.com/feed/update/urn:li:activity:6634997148599586816/"
   );
