@@ -8,8 +8,10 @@ async function run() {
   await loadFBCookie(page);
 
   // facebook logined
-  await page.goto("https://mbasic.facebook.com/groups/1902499916677004");
-  await page.screenshot({ path: "static/fb.png" });
+  await page.goto(
+    "https://m.facebook.com/groups/284426014978595?view=permalink&id=2888141024607068"
+  );
+  await page.screenshot({ path: "static/fb_article.png" });
   const html = await page.evaluate(() => document.body.innerHTML);
   console.log(html);
   await browser.close();
@@ -20,7 +22,7 @@ async function setupBrowser() {
 
   const options = {
     args: [
-      "--user-agent=`Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36`"
+      "--user-agent=`Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36`"
     ]
   };
 
@@ -38,7 +40,7 @@ async function loadFBCookie(page) {
     "https://mobile.facebook.com",
     "https://business.facebook.com"
   ];
-  const cookieText = await readTextFile("static/cookie.txt");
+  const cookieText = await readTextFile("static/thanhdao_cookie.txt");
   const ca = cookieText.split(";");
   const promises = ca.map(item => {
     if (item) {
