@@ -1,5 +1,5 @@
-const fs = require("fs");
 const cheerio = require("cheerio");
+const { readTextFile } = require("helper");
 
 async function run() {
   const html = await readTextFile("static/fb_article.txt");
@@ -24,27 +24,5 @@ async function run() {
 
   console.log({ owner, text, comments });
 }
-
-function readTextFile(pathToFile) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(pathToFile, "utf8", (error, contents) => {
-      if (error) {
-        reject(error);
-      }
-      resolve(contents);
-    });
-  });
-}
-
-// function writeTextFile(pathToFile, data) {
-//   return new Promise((resolve, reject) => {
-//     fs.writeFile(pathToFile, data, error => {
-//       if (error) {
-//         reject(error);
-//       }
-//       resolve();
-//     });
-//   });
-// }
 
 run().catch(console.log);

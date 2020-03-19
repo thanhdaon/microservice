@@ -1,23 +1,8 @@
-const fs = require("fs");
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+const { readTextFile, writeTextFile } = require("helper");
 
-async function run() {
-  const browser = await setupBrowser();
-  const page = await browser.newPage();
-  await loadFBCookie(page);
-
-  // facebook logined
-  await page.goto(
-    "https://m.facebook.com/groups/284426014978595?view=permalink&id=2888141024607068"
-  );
-  await page.screenshot({ path: "static/fb_article.png" });
-  const html = await page.evaluate(() => document.body.innerHTML);
-  console.log(html);
-  await browser.close();
-}
-
-async function setupBrowser() {
+async function crawHtml({ cookieFilePath, url, crawedPath }) {
   puppeteer.use(StealthPlugin());
 
   const options = {
@@ -25,11 +10,18 @@ async function setupBrowser() {
       "--user-agent=`Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36`"
     ]
   };
+  const browser = await puppeteer.launch(options);
+  const page = await browser.newPage();
+  await loadFBCookie(page, cookieFilePath);
 
-  return await puppeteer.launch(options);
+  await page.goto(url);
+  await page.screenshot({ path: "static/fb.png" });
+  const html = await page.evaluate(() => document.body.innerHTML);
+  await writeTextFile(crawedPath, html);
+  await browser.close();
 }
 
-async function loadFBCookie(page) {
+async function loadFBCookie(page, pathToCookieFile) {
   const urls = [
     "https://www.facebook.com",
     "https://web.facebook.com",
@@ -40,7 +32,7 @@ async function loadFBCookie(page) {
     "https://mobile.facebook.com",
     "https://business.facebook.com"
   ];
-  const cookieText = await readTextFile("static/thanhdao_cookie.txt");
+  const cookieText = await readTextFile(pathToCookieFile);
   const ca = cookieText.split(";");
   const promises = ca.map(item => {
     if (item) {
@@ -54,15 +46,4 @@ async function loadFBCookie(page) {
   await Promise.all(promises);
 }
 
-function readTextFile(pathToFile) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(pathToFile, "utf8", (error, contents) => {
-      if (error) {
-        reject(error);
-      }
-      resolve(contents);
-    });
-  });
-}
-
-run().catch(console.log);
+module.exports = crawHtml;
