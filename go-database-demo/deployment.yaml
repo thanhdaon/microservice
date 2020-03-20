@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: check-mongo-connection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: check-mongo-connection
+  template:
+    metadata:
+      labels:
+        app: check-mongo-connection
+    spec:
+      containers:
+        - name: check-mongo-connection
+          image: daongocthanh/check-mongo-connection:2

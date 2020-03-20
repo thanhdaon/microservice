@@ -1,3 +1,5 @@
+package main
+
 import (
 	"context"
 	"fmt"
@@ -18,12 +20,12 @@ type Person struct {
 
 func main() {
 	connectDB()
-	update()
+	// update()
 	defer client.Disconnect(context.TODO())
 }
 
 func connectDB() {
-	clientOptions := options.Client().ApplyURI("mongodb://root:root_password@localhost:27017")
+	clientOptions := options.Client().ApplyURI("mongodb://root:password@mongo-cluster-ip-service:27027/demo")
 
 	var err error
 
@@ -37,7 +39,9 @@ func connectDB() {
 		log.Fatal(err)
 	}
 
+	forever := make(chan bool)
 	fmt.Println("Connected to MongoDB!")
+	<-forever
 }
 
 func insert() {

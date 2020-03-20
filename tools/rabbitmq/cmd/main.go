@@ -2,28 +2,26 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"rabbitmq-tools/pkg"
+	"rabbitmq-tools/pkg/rabbit"
 )
 
 func main() {
-	consumers, err := pkg.FetchAllConsumer(
-		"http://51.178.63.192:30001/api/consumers",
-		"admin",
-		"Mektoube2020",
+	r := rabbit.SetupRabbit(
+		"amqp://congtyio_email_crawler:FQ914bquqmkcW8N5aDhg6qzfIBDNLX8r@congty.io:5672/congtyio_email_crawler",
+		[]string{},
 	)
 
-	failOnError(err, "main")
-	for _, consumer := range consumers {
-		if consumer.Queue.Name == "moderation-image-queue" {
-			fmt.Printf("%s - %s\n", consumer.Queue.Name, consumer.ConsumerTag)
-		}
+	consumers, err := r.FetchAllConsumer(
+		"http://congty.io:15672/api/consumers",
+		"congtyio_email_crawler",
+		"FQ914bquqmkcW8N5aDhg6qzfIBDNLX8r",
+	)
+
+	if err != nil {
+		fmt.Println(err)
 	}
 
-}
-
-func failOnError(err error, msg string) {
-	if err != nil {
-		log.Fatalf("%s: %v", msg, err)
+	for _, c := range consumers {
+		fmt.Printf("%s-%s \n", c.Queue.Name, c.ConsumerTag)
 	}
 }
