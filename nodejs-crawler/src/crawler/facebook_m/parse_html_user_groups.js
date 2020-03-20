@@ -1,7 +1,7 @@
 const cheerio = require("cheerio");
 const { readTextFile } = require("helper");
 
-async function parseHtmlUserGroups() {
+async function parseHtmlUserFriends() {
   const html = await readTextFile("static/fb.txt");
   const $ = cheerio.load(html);
 
@@ -13,11 +13,9 @@ async function parseHtmlUserGroups() {
       const avatar = $(this)
         .find("img")
         .attr("src");
-
       const name = $(this)
         .find("div._4ik4 > div._52je")
         .text();
-
       const link = $(this)
         .find("a._7hkg")
         .attr("href");
@@ -27,4 +25,4 @@ async function parseHtmlUserGroups() {
   console.log(groups);
 }
 
-module.exports = parseHtmlUserGroups;
+module.exports = parseHtmlUserFriends;
