@@ -1,16 +1,12 @@
-const {
-  crawlHtmlWithAutoScroll,
-  parseHtmlUserFriends
-} = require("crawler/facebook_m");
+const amqp = require('amqplib')
 
 async function run() {
-  // await crawlHtmlWithAutoScroll({
-  //   cookieFilePath: "static/thanhdao_cookie.txt",
-  //   crawedPath: "static/crawed.txt",
-  //   url: "https://m.facebook.com/friends/center/friends"
-  // });
+  const connection = await amqp.connect(
+      'amqp://congtyio_email_crawler:FQ914bquqmkcW8N5aDhg6qzfIBDNLX8r@congty.io:5672/congtyio_email_crawler');
 
-  await parseHtmlUserFriends();
+  const channel = await connection.createChannel();
+
+  await channel.purgeQueue('test')
 }
 
 run().catch(console.log);

@@ -21,7 +21,7 @@ async function demo({ url }) {
   }
 
   // Scroll back to top
-  await page.evaluate(_ => {
+  await page.evaluate(() => {
     window.scrollTo(0, 0);
   });
 
