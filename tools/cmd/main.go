@@ -1,27 +1,38 @@
 package main
 
 import (
-	"fmt"
-	"rabbitmq-tools/pkg/rabbit"
+	"encoding/csv"
+	"io"
+	"log"
+	"os"
+	"tools/pkg/rabbit"
+)
+
+var (
+	PROD_RABBIT    = "amqp://ltservices:jwtm9gby6Wn9VmvR@54.38.40.255:5672"
+	STAGING_RABBIT = "amqp://admin:Mektoube2020@51.178.63.192:30002"
 )
 
 func main() {
-	r := rabbit.SetupRabbit(
-		"amqp://congtyio_email_crawler:FQ914bquqmkcW8N5aDhg6qzfIBDNLX8r@congty.io:5672/congtyio_email_crawler",
-		[]string{},
-	)
 
-	consumers, err := r.FetchAllConsumer(
-		"http://congty.io:15672/api/consumers",
-		"congtyio_email_crawler",
-		"FQ914bquqmkcW8N5aDhg6qzfIBDNLX8r",
-	)
+	r := rabbit.SetupRabbit(STAGING_RABBIT, []string{})
 
-	if err != nil {
-		fmt.Println(err)
+	csvfile, err := os.Open("upload-photo.csv")
+	failOnError(err, "can mot open file")
+	reader := csv.NewReader(csvfile)
+
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+		failOnError(err, "okok")
+		r.PublishToRabbit(record[0], "moderation-upload-photo")
 	}
+}
 
-	for _, c := range consumers {
-		fmt.Printf("%s-%s \n", c.Queue.Name, c.ConsumerTag)
+func failOnError(err error, msg string) {
+	if err != nil {
+		log.Fatalf("%s: %+v", msg, err)
 	}
 }

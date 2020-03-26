@@ -1,6 +1,7 @@
 package rabbit
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -77,6 +78,25 @@ func (r *Rabbit) FetchAllConsumer(url, username, password string) ([]ConsumerDet
 	}
 
 	return consumers, nil
+}
+
+func (r *Rabbit) GetMessages(url, username, password string) ([]byte, error) {
+	jsonBody, _ := json.Marshal(map[string]string{})
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return nil, errors.Wrap(err, "can not create request")
+	}
+	req.Header.Add("Authorization", "Basic "+basicAuth(username, password))
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "can not do request")
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, errors.Wrap(err, "can not parse body")
+	}
+	return body, nil
 }
 
 func (r *Rabbit) CleanupRabbit() {

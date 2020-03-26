@@ -4,10 +4,13 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 var client *mongo.Client
@@ -25,7 +28,7 @@ func main() {
 }
 
 func connectDB() {
-	clientOptions := options.Client().ApplyURI("mongodb://root:password@mongo-cluster-ip-service:27027/demo")
+	clientOptions := options.Client().ApplyURI(os.Getenv("MONGO_URI"))
 
 	var err error
 
@@ -37,6 +40,13 @@ func connectDB() {
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
+	err = client.Ping(ctx, readpref.Primary())
+	if err != nil {
+		fmt.Println("can not Ping")
+		return
 	}
 
 	forever := make(chan bool)

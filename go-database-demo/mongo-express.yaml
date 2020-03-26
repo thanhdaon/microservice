@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    component: mongo-express
+  name: mongo-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: mongo-express
+  template:
+    metadata:
+      labels:
+        component: mongo-express
+    spec:
+      containers:
+        - name: mongo-express
+          image: mongo-express
+          ports:
+            - containerPort: 8081
+          env:
+            - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+              value: root
+            - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+              value: password
+            - name: ME_CONFIG_MONGODB_SERVER
+              value: mongo-service
+            - name: ME_CONFIG_BASICAUTH_USERNAME
+              value: moderation-dev
+            - name: ME_CONFIG_BASICAUTH_PASSWORD
+              value: moderation-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-express-service
+spec:
+  type: NodePort
+  selector:
+    component: mongo-express
+  ports:
+    - port: 8081
+      targetPort: 8081
+      nodePort: 30002

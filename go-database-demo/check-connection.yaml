@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: check-mongo-connection
   name: check-mongo-connection
 spec:
   replicas: 1
@@ -14,4 +16,7 @@ spec:
     spec:
       containers:
         - name: check-mongo-connection
-          image: daongocthanh/check-mongo-connection:2
+          image: daongocthanh/check-mongo-connection:5
+          env:
+            - name: MONGO_URI
+              value: "mongodb://root:X6XRWjJ4HQEUa9md@node1.mektoube.fr:27027/rails_admin_development?authSource=admin"
