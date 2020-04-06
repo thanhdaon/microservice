@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    component: mongo
   name: mongo-deployment
 spec:
   replicas: 1
@@ -12,18 +14,9 @@ spec:
       labels:
         component: mongo
     spec:
-      volumes:
-        - name: mongo-storage
-          persistentVolumeClaim:
-            claimName: database-persistent-volume-claim
       containers:
         - name: mongo
           image: mongo:4.0.16-xenial
-          ports:
-            - containerPort: 27017
-          volumeMounts:
-            - name: mongo-storage
-              mountPath: /data/db
           env:
             - name: MONGO_INITDB_DATABASE
               value: demo
@@ -31,3 +24,16 @@ spec:
               value: root
             - name: MONGO_INITDB_ROOT_PASSWORD
               value: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service
+spec:
+  type: NodePort
+  selector:
+    component: mongo
+  ports:
+    - port: 27017
+      targetPort: 27017
+      nodePort: 30001

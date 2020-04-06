@@ -1,54 +1,47 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"time"
+	"io/ioutil"
+	"log"
+
+	pigo "github.com/esimov/pigo/core"
 )
 
-func process(ch chan string) {
-	time.Sleep(10500 * time.Millisecond)
-	ch <- "process successful"
-}
-
 func main() {
-	ch := make(chan string)
-	go process(ch)
-	for {
-		time.Sleep(1000 * time.Millisecond)
-		select {
-		case v := <-ch:
-			fmt.Println("received value: ", v)
-			return
-		default:
-			fmt.Println("no value received")
-		}
-	}
-
-	for _, post := range response.Posts {
-		fmt.Println(post)
-	}
-}
-
-func demo2() {
-	query := make(url.Values)
-	query.Add("foo3", "123")
-	url := &url.URL{RawQuery: query.Encode(), Host: "foo", Scheme: "https"}
-	fmt.Println(url)
-}
-
-func demo3() {
-	req := req.New()
-	resp, err := req.Get("https://trangnhat.net/tin-tuc/ghost/api/v3/content/posts?key=9f1e64bcb6124ed6d38debcc9b&limit=2&field=all")
+	cascadeFile, err := ioutil.ReadFile("cascade/facefinder")
 	if err != nil {
-		fmt.Println("1")
+		log.Fatalf("Error reading the cascade file: %v", err)
 	}
-	var body ResponseBody
-	if err := resp.ToJSON(&body); err != nil {
-		fmt.Println("2")
-	}
-	for _, post := range body.Posts {
-		fmt.Println(post.ID)
+	src, err := pigo.GetImage("1.jpg")
+	if err != nil {
+		log.Fatalf("Cannot open the image file: %v", err)
 	}
 
+	pixels := pigo.RgbToGrayscale(src)
+	cols, rows := src.Bounds().Max.X, src.Bounds().Max.Y
+
+	cParams := pigo.CascadeParams{
+		MinSize:     20,
+		MaxSize:     1000,
+		ShiftFactor: 0.1,
+		ScaleFactor: 1.1,
+
+		ImageParams: pigo.ImageParams{
+			Pixels: pixels,
+			Rows:   rows,
+			Cols:   cols,
+			Dim:    cols,
+		},
+	}
+
+	pigo := pigo.NewPigo()
+	classifier, err := pigo.Unpack(cascadeFile)
+	if err != nil {
+		log.Fatalf("Error reading the cascade file: %s", err)
+	}
+
+	angle := 0.0
+	dets := classifier.RunCascade(cParams, angle)
+	fmt.Println(dets)
 }
