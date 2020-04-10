@@ -12,6 +12,9 @@ services:
     volumes:
       - "pg-data:/var/lib/postgresql/data"
 
+  optimize-db:
+    image: "daongocthanh/optimize-db"
+
   mysql8-db:
     image: "mysql:8.0.19"
     environment:

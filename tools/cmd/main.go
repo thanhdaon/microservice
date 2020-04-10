@@ -16,7 +16,7 @@ var (
 
 func main() {
 
-	r := rabbit.SetupRabbit(STAGING_RABBIT, []string{
+	r := rabbit.SetupRabbit(LOCAL_STRING, []string{
 		"moderation-final",
 		"moderation-upload-photo",
 		"moderation-image-queue",
