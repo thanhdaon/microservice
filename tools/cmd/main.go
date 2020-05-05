@@ -16,7 +16,7 @@ var (
 
 func main() {
 
-	r := rabbit.SetupRabbit(LOCAL_STRING, []string{
+	r := rabbit.SetupRabbit(STAGING_RABBIT, []string{
 		"moderation-final",
 		"moderation-upload-photo",
 		"moderation-image-queue",
@@ -29,7 +29,12 @@ func main() {
 	failOnError(err, "can mot open file")
 	reader := csv.NewReader(csvfile)
 
+	counter := 0
 	for {
+		counter++
+		if counter > 6 {
+			return
+		}
 		record, err := reader.Read()
 		if err == io.EOF {
 			break
