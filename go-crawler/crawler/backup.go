@@ -1,27 +1,26 @@
 package crawler
 
 import (
-	"encoding/csv"
-	"fmt"
-	"io"
+	"bufio"
+	"log"
 	"os"
 )
 
 func Backup() {
 	SetupRabbit()
 	defer CleanupRabbit()
-	file, err := os.Open("backup.csv")
-	failOnError(err, "can not open backup.csv")
+	file, err := os.Open("static/haymora.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer file.Close()
 
-	reader := csv.NewReader(file)
-	for {
-		record, err := reader.Read()
-		if err == io.EOF {
-			break
-		}
-		failOnError(err, "fail when read backup.cvs")
-		publishToRabbit(record[0], "emailsvc-bing-search-result")
-		fmt.Println(record[0])
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		publishToRabbit(scanner.Text(), "emailsvc-domain-waiting-to-crawl")
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
 	}
 }
