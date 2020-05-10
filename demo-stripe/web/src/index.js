@@ -2,23 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
+import Products from "components/Products";
 import Checkout from "components/Checkout";
-
-import "css/normalize.css";
-import "css/global.css";
 
 function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/success.html">
-          <div />
-        </Route>
-        <Route path="/canceled.html">
-          <div></div>
-        </Route>
-        <Route path="/">
+        <Route path="/checkout/:productId">
           <Checkout />
+        </Route>
+        <Route path="/products">
+          <Products />
         </Route>
       </Switch>
     </Router>
