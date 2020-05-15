@@ -14,7 +14,7 @@ export default async (req, res) => {
     metadata: { integration_check: "accept_a_payment" },
   });
 
-  res.status(200).json({
-    clientSecret: paymentIntent.client_secret,
-  });
+  res
+    .status(200)
+    .json({ clientSecret: paymentIntent.client_secret, paymentIntent });
 };

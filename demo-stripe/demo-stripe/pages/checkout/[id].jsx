@@ -11,6 +11,8 @@ import {
 import { Product } from "components";
 import { products } from "data";
 
+const stripePromise = loadStripe("pk_test_QPcSd2ybM4YsJxI5bnrfT2s4005PktZNSp");
+
 function Checkout() {
   const { query } = useRouter();
 
@@ -24,8 +26,6 @@ function Checkout() {
     </Elements>
   );
 }
-
-const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
 
 function CheckoutForm() {
   const stripe = useStripe();
@@ -74,7 +74,6 @@ function CheckoutForm() {
             className="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded"
             type="text"
             placeholder="Your Name"
-            aria-label="Name"
           />
         </div>
 
