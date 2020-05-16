@@ -9,9 +9,9 @@ function Product({ id, name, description, image, price, buyable = true } = {}) {
       </div>
       <img className="h-56 w-full object-cover mt-2" src={image} alt={name} />
       <div className="flex items-center justify-between px-4 py-2 bg-gray-900">
-        <h1 className="text-gray-200 font-bold text-xl">{price}</h1>
+        <h1 className="text-gray-200 font-bold text-xl">${price}</h1>
         {buyable && (
-          <Link href={`/checkout/${id}`}>
+          <Link as={`/checkout/${id}`} href="/checkout/[id]">
             <button className="px-3 py-1 bg-gray-200 text-sm text-gray-900 font-semibold rounded">
               Buy
             </button>

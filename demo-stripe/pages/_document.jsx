@@ -14,6 +14,11 @@ class MyDocument extends Document {
         <NextHead>
           <title>App</title>
           <link rel="icon" href="/favicon.ico" />
+
+          <script
+            src="https://kit.fontawesome.com/ff796dfd7b.js"
+            crossOrigin="anonymous"
+          ></script>
           <link
             href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
             rel="stylesheet"
