@@ -1,0 +1,17 @@
+version: "3.5"
+
+services:
+  email_seeder:
+    image: "daongocthanh/seeder:2"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 800M
+      restart_policy:
+        condition: on-failure
+    networks:
+      - congty-io
+networks:
+  congty-io:

@@ -1,0 +1,126 @@
+{
+  "data": {
+    "domain": "hivetech.vn",
+    "disposable": false,
+    "webmail": false,
+    "accept_all": false,
+    "pattern": null,
+    "organization": null,
+    "country": null,
+    "state": null,
+    "emails": [
+      {
+        "value": "contact@hivetech.vn",
+        "type": "generic",
+        "confidence": 81,
+        "sources": [
+          {
+            "domain": "hivetech.vn",
+            "uri": "http://hivetech.vn",
+            "extracted_on": "2020-04-13",
+            "last_seen_on": "2020-04-27",
+            "still_on_page": true
+          },
+          {
+            "domain": "hivetech.vn",
+            "uri": "http://hivetech.vn/2019/06",
+            "extracted_on": "2020-04-13",
+            "last_seen_on": "2020-04-24",
+            "still_on_page": true
+          },
+          {
+            "domain": "hivetech.vn",
+            "uri": "http://hivetech.vn/2019/07",
+            "extracted_on": "2020-04-13",
+            "last_seen_on": "2020-04-27",
+            "still_on_page": true
+          },
+          {
+            "domain": "hivetech.vn",
+            "uri": "http://hivetech.vn/2019/09",
+            "extracted_on": "2020-04-13",
+            "last_seen_on": "2020-04-26",
+            "still_on_page": true
+          },
+          {
+            "domain": "hivetech.vn",
+            "uri": "http://hivetech.vn/recruitment",
+            "extracted_on": "2019-09-21",
+            "last_seen_on": "2020-04-13",
+            "still_on_page": true
+          }
+        ],
+        "first_name": null,
+        "last_name": null,
+        "position": null,
+        "seniority": null,
+        "department": "support",
+        "linkedin": null,
+        "twitter": null,
+        "phone_number": null
+      },
+      {
+        "value": "hrd@hivetech.vn",
+        "type": "generic",
+        "confidence": 79,
+        "sources": [
+          {
+            "domain": "hivetech.vn",
+            "uri": "http://hivetech.vn/2019/06",
+            "extracted_on": "2020-04-13",
+            "last_seen_on": "2020-04-24",
+            "still_on_page": true
+          },
+          {
+            "domain": "hivetech.vn",
+            "uri": "http://hivetech.vn/2019/07",
+            "extracted_on": "2020-04-13",
+            "last_seen_on": "2020-04-27",
+            "still_on_page": true
+          },
+          {
+            "domain": "hivetech.vn",
+            "uri": "http://hivetech.vn/2019/09",
+            "extracted_on": "2020-04-13",
+            "last_seen_on": "2020-04-26",
+            "still_on_page": true
+          },
+          {
+            "domain": "hivetech.vn",
+            "uri": "http://hivetech.vn/2019/12",
+            "extracted_on": "2020-04-13",
+            "last_seen_on": "2020-04-26",
+            "still_on_page": true
+          },
+          {
+            "domain": "hivetech.vn",
+            "uri": "http://hivetech.vn/2020/02",
+            "extracted_on": "2020-04-13",
+            "last_seen_on": "2020-04-13",
+            "still_on_page": true
+          }
+        ],
+        "first_name": null,
+        "last_name": null,
+        "position": null,
+        "seniority": null,
+        "department": "hr",
+        "linkedin": null,
+        "twitter": null,
+        "phone_number": null
+      }
+    ]
+  },
+  "meta": {
+    "results": 2,
+    "limit": 10,
+    "offset": 0,
+    "params": {
+      "domain": "hivetech.vn",
+      "company": null,
+      "type": null,
+      "seniority": null,
+      "department": null
+    }
+  }
+}

@@ -1,12 +1,13 @@
-FROM golang:1.13-alpine as builder
+FROM golang:1.14.3-alpine
 WORKDIR /app
 COPY go.mod /app/go.mod
 COPY go.sum /app/go.sum
 RUN go mod download
 COPY . .
-RUN go build -ldflags="-s -w" -o appbin cmd/crawl_search_result/main.go
+RUN go build -ldflags="-s -w" -o appbin cmd/crawl-hunterio/main.go
 
 FROM alpine:latest
 WORKDIR /app
-COPY --from=builder /app/appbin .
+COPY --from=0 /app/appbin .
+COPY --from=0 /app/static ./static
 CMD ["/app/appbin"]

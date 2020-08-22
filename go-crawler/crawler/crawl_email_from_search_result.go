@@ -82,7 +82,7 @@ func crawlEmailFromSearchResult(url string) {
 			resource = Resource{Resource: r.Request.URL.String()}
 			db.Create(&resource)
 		}
-		for emailStr, _ := range emails.Iterator() {
+		for emailStr := range emails.Iterator() {
 			var email Email
 			db.First(&email, "email = ?", emailStr)
 			if email.ID == 0 {
