@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func proxyOk(scheme, ip, port string) bool {
+func ProxyOk(scheme, ip, port string) bool {
 	host := fmt.Sprintf("%s:%s", ip, port)
 	urlProxy := &url.URL{Scheme: scheme, Host: host}
 	client := &http.Client{
