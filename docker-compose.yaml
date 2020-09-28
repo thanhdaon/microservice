@@ -69,9 +69,18 @@ services:
     volumes:
       - "rabbit-data:/var/lib/rabbitmq"
 
+  redis:
+    image: "redis:6.0.8-alpine"
+    container_name: "redis"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis-data:/data"
+
 volumes:
   pg-data:
   mysql5-data:
   mysql8-data:
   mongo-data:
   rabbit-data:
+  redis-data:
