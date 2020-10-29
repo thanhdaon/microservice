@@ -6,8 +6,7 @@
     "build:wieldy-style": "lessc --js styles/wieldy/wieldy.less styles/wieldy/wieldy.css",
     "build": "next build",
     "dev": "next dev",
-    "start": "next start",
-    "export": "next export"
+    "start": "next start"
   },
   "dependencies": {
     "next": "^10.0.0",
@@ -19,6 +18,11 @@
     "autoprefixer": "^10.0.1",
     "less": "^3.12.2",
     "postcss-import": "^13.0.0",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5",
+    "redux-dynamic-modules": "^5.2.3",
+    "redux-dynamic-modules-thunk": "^5.2.3",
+    "redux-thunk": "^2.3.0",
     "tailwindcss": "^1.9.6"
   }
 }
