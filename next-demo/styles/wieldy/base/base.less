@@ -27,7 +27,9 @@ body {
   }
 
   &.full-scroll {
-    overflow: inherit;
+    & #root {
+      overflow: auto;
+    }
   }
 }
 
@@ -292,7 +294,8 @@ img {
 
   & li a,
   & li .@{class-prefix}-link,
-  & li i {
+  & li i,
+  & li .anticon {
     cursor: pointer;
     width: @size-30;
     height: @size-30;
@@ -307,12 +310,15 @@ img {
   & li.active a,
   & li.active .@{class-prefix}-link,
   & li.active i,
+  & li.active .anticon,
   & li a:hover,
   & li .@{class-prefix}-link:hover,
   & li i:hover,
+  & li .anticon:hover,
   & li a:focus,
   & li .@{class-prefix}-link:focus,
-  & li i:focus {
+  & li i:focus
+  & li .anticon:focus {
     color: @white-color;
     background: @primary-color;
   }
@@ -669,10 +675,19 @@ hr {
   top: 2px;
 }
 
+.ant-collapse-content-box {
+  & > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.react-stickies-wrapper {
+  padding-bottom: 16px;
+}
+
 // Hide on 1366
 @media screen and (max-width: 1366px) {
   .gx-hide-1366 {
     display: none;
   }
 }
-

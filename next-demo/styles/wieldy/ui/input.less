@@ -19,6 +19,10 @@
   margin-bottom: 10px;
 }
 
+.ant-input-number {
+  margin-right: 10px;
+}
+
 .@{class-prefix}-form-group {
   margin-bottom: 10px;
 }
@@ -210,8 +214,19 @@
     .border-radius(@border-radius-sm);
   }
 
-  & .ant-select-selection--single {
+  & .ant-select-selection--single,
+  &.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
     height: @input-height-sm;
+    padding: 0 7px;
+  }
+
+  &.ant-select-single:not(.ant-select-customize-input) .ant-select-selector .ant-select-selection-search-input {
+    height: @input-height-sm - 2;
+  }
+
+  &.ant-select-single .ant-select-selector .ant-select-selection-item,
+  &.ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+    line-height: @input-height-sm - 2;
   }
 
   & .ant-select-selection__rendered {
@@ -234,6 +249,7 @@
 }
 
 .@{class-prefix}-form-inline-label-up {
+  & .ant-form-item,
   & .ant-form-item > .ant-form-item-control-wrapper,
   & .ant-form-item > .ant-form-item-label {
     display: block;
@@ -243,7 +259,7 @@
     text-align: left;
     color: @grey-6;
     line-height: 1;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
   }
 
   & .ant-select-selection--single,
@@ -254,6 +270,38 @@
   & .ant-select-selection__rendered {
     line-height: @input-height-base-sm;
   }
+
+  & .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+    height: 30px;
+  }
+
+  & .ant-select-single:not(.ant-select-customize-input) .ant-select-selector .ant-select-selection-search-input {
+    height: 28px;
+  }
+
+  & .ant-select-single .ant-select-selector .ant-select-selection-item,
+  & .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+    line-height: 28px;
+  }
+
+  &.ant-form-inline .ant-form-item > .ant-form-item-label,
+  &.ant-form-inline .ant-form-item > .ant-form-item-control {
+    display: block;
+  }
+
+  & .ant-form-item-label > label {
+    height: auto;
+  }
+}
+
+.@{class-prefix}-input-lineheight {
+  line-height: 36px;
+}
+
+.ant-mention-wrapper {
+  border: @border-style-base @border-width-base @border-color;
+  padding: 8.6px 11px;
+  .border-radius(@border-radius-base);
 }
 
 @media screen and (max-width: @screen-xs-max) {

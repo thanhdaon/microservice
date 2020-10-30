@@ -58,7 +58,7 @@
   }
 
   .framed-layout & {
-    height: calc(100vh~"-"30px + 2 * @framed-layout-base) !important;
+    height: calc(100vh~"-"30px ~"-" 2 * @framed-layout-base) !important;
 
     @media screen and (max-width: @screen-md-max) {
       height: calc(100vh ~"-" 30px) !important;
@@ -69,6 +69,7 @@
 .@{class-prefix}-color-option {
   margin-bottom: 0;
   padding-left: 0;
+  list-style: none;
 
   & li {
     font-size: 36px;

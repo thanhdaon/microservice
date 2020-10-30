@@ -31,6 +31,8 @@
   &-item .icon {
     min-width: 14px;
     margin-right: 20px;
+    display: inline-block;
+    vertical-align: middle;
 
     &[class^="icon-"]::before,
     &[class*=" icon-"]::before {
@@ -511,6 +513,10 @@
     > a:hover {
       color: @menu-dark-highlight-color;
     }
+
+    & span {
+      color: inherit;
+    }
   }
 
   &&-dark &-item-selected,
@@ -534,14 +540,14 @@
     color: @menu-dark-color;
   }
 
+  &-dark .ant-menu-submenu-selected .ant-menu-sub .ant-menu-submenu-open .ant-menu-submenu-title,
   &-dark .ant-menu-submenu-selected .ant-menu-submenu-title,
   &-dark .ant-menu-submenu-selected .ant-menu-submenu-selected .ant-menu-submenu-title {
     color: @white-color;
-  }
 
-  &-dark .ant-menu-submenu-selected .ant-menu-submenu-title:hover,
-  &-dark .ant-menu-submenu-selected .ant-menu-submenu-selected .ant-menu-submenu-title:hover {
-    color: @menu-dark-highlight-color;
+    &:hover {
+      color: @menu-dark-highlight-color;
+    }
   }
 }
 
@@ -660,6 +666,14 @@
   }
 }
 
+.@{class-prefix}-menu-horizontal {
+  .border-radius(@border-radius-lg);
+
+  &:before {
+    display: none;
+  }
+}
+
 .@{class-prefix}-header-horizontal-nav {
   & .ant-menu-horizontal {
     border-bottom: 0 none;
@@ -771,6 +785,7 @@
     }
   }
 
+  & .ant-menu-submenu,
   & .ant-menu-submenu > .ant-menu {
     .border-radius(@border-radius-lg);
   }
@@ -855,14 +870,14 @@
     &.ant-menu-item-selected > a {
       color: @menu-dark-bg;
       background-color: @menu-dark-highlight-color;
-      .border-radius(@border-radius-sm - 2)
+      .border-radius(@border-radius-sm - 2);
     }
   }
 
   & .ant-menu-inline-collapsed > .ant-menu-submenu.ant-menu-submenu-selected > .ant-menu-submenu-title > span {
     color: @menu-dark-bg;
     background-color: @menu-dark-highlight-color;
-    .border-radius(@border-radius-sm - 2)
+    .border-radius(@border-radius-sm - 2);
   }
 
   & .ant-menu-vertical .ant-menu-item .icon,
@@ -882,4 +897,9 @@
     .border-radius(@border-radius-sm);
   }
 }
+
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: transparent;
+}
+
 

@@ -11,6 +11,7 @@
       margin: 0;
       width: 50%;
       text-align: center;
+      display: block;
     }
 
     & .ant-tabs-ink-bar {
@@ -48,12 +49,12 @@
     font-weight: @font-weight-normal;
   }
 
-  & .ant-tabs-nav-container {
+  & .ant-tabs-nav-wrap {
+    .justify-content(center);
     font-size: @font-size-lg;
-    text-align: center;
 
     @media screen and (max-width: @screen-xs-max) {
-      text-align: left;
+      .justify-content(flex-start);
     }
   }
 
@@ -62,13 +63,12 @@
   }
 }
 
-.@{class-prefix}-card-tabs-right {
-
-  & .ant-tabs-nav-container {
-    text-align: right;
+.@{class-prefix}-tabs-right {
+  & .ant-tabs-nav-wrap {
+    .justify-content(flex-end);
 
     @media screen and (max-width: @screen-xs-max) {
-      text-align: left;
+      .justify-content(flex-start);
     }
   }
 }

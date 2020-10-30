@@ -385,6 +385,7 @@
   list-style: none;
   margin-left: auto;
   margin-bottom: 0;
+  padding-left: 0;
 
   & li {
     padding: 0 10px;
@@ -413,7 +414,8 @@
   .flex-display(flex, row, nowrap);
   margin-left: 28px;
 
-  & .ant-select-selection {
+  & .ant-select-selection,
+  & .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
     .border-radius(0 @border-radius-sm @border-radius-sm 0);
     background-color: @nav-dark-bg;
     border-color: @nav-dark-bg;

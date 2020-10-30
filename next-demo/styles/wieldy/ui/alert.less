@@ -1,7 +1,12 @@
 /*Alert Styles*/
+.ant-alert {
+  margin-bottom: 16px;
+}
+
 .@{class-prefix}-custom-sweet-alert {
-  & h2 {
-    color: @white-color;
+  & h2,
+  & .text-muted {
+    color: @white-color !important;
   }
 }
 
@@ -17,4 +22,11 @@
 
 .@{class-prefix}-sweet-alert-top-space {
   padding-top: @size-40 !important;
+}
+
+.sweet-alert {
+  & h2 {
+    font-size: 20px !important;
+    font-weight: 400 !important;
+  }
 }

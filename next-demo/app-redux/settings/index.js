@@ -5,10 +5,10 @@ import {
   THEME_TYPE_SEMI_DARK,
 } from "constants/theme-settings";
 
-const WINDOW_WIDTH = "WINDOW_WIDTH";
+const SET_WINDOW_WIDTH = "set_window_width";
 
 const SettingActions = {
-  updateWindowWidth: (width) => ({ type: WINDOW_WIDTH, payload: width }),
+  updateWindowWidth: (width) => ({ type: SET_WINDOW_WIDTH, payload: width }),
 };
 
 const initialState = {
@@ -17,7 +17,6 @@ const initialState = {
   layoutType: LAYOUT_TYPE_FULL,
   themeType: THEME_TYPE_SEMI_DARK,
   colorSelection: THEME_COLOR_SELECTION_PRESET,
-
   pathname: "",
   width: typeof window === "undefined" ? 0 : window.innerWidth,
   locale: {
@@ -30,7 +29,7 @@ const initialState = {
 
 function reducer(state = initialState, action) {
   switch (action.type) {
-    case SettingActions.WINDOW_WIDTH:
+    case SET_WINDOW_WIDTH:
       return { ...state, width: action.payload };
     default:
       return state;
