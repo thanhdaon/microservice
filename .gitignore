@@ -3,3 +3,4 @@ appbin
 node_modules/
 gtatic/
 tools/
+.next/

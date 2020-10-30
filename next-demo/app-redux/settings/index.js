@@ -1,22 +1,21 @@
-import {
-  LAYOUT_TYPE_FULL,
-  NAV_STYLE_FIXED,
-  THEME_COLOR_SELECTION_PRESET,
-  THEME_TYPE_SEMI_DARK,
-} from "constants/theme-settings";
-
 const SET_WINDOW_WIDTH = "set_window_width";
+const TOGGLE_COLLAPSED_NAV = "toggle_collapsed_nav";
+const SWITCH_LANGUAGE = "switch_language";
 
 const SettingActions = {
   updateWindowWidth: (width) => ({ type: SET_WINDOW_WIDTH, payload: width }),
+  toggleCollapsedSideNav: (navCollapsed) => ({
+    type: TOGGLE_COLLAPSED_NAV,
+    payload: navCollapsed,
+  }),
+  switchLanguage: (locale) => ({
+    type: SWITCH_LANGUAGE,
+    payload: locale,
+  }),
 };
 
 const initialState = {
   navCollapsed: true,
-  navStyle: NAV_STYLE_FIXED,
-  layoutType: LAYOUT_TYPE_FULL,
-  themeType: THEME_TYPE_SEMI_DARK,
-  colorSelection: THEME_COLOR_SELECTION_PRESET,
   pathname: "",
   width: typeof window === "undefined" ? 0 : window.innerWidth,
   locale: {
@@ -31,6 +30,10 @@ function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_WINDOW_WIDTH:
       return { ...state, width: action.payload };
+    case TOGGLE_COLLAPSED_NAV:
+      return { ...state, navCollapsed: action.payload };
+    case SWITCH_LANGUAGE:
+      return { ...state, locale: action.payload };
     default:
       return state;
   }
