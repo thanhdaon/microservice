@@ -1,17 +1,23 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Menu } from "antd";
+
 import IntlMessages from "components/IntlMessage";
 import AppLink from "components/AppLink";
 
 function HorizontalNav() {
-  const getNavStyleSubMenuClass = () => {
-    return "gx-menu-horizontal gx-submenu-popup-curve gx-inside-submenu-popup-curve";
-  };
+  const pathname = useSelector((state) => state.settings.pathname);
 
+  function getNavStyleSubMenuClass() {
+    return "gx-menu-horizontal gx-submenu-popup-curve gx-inside-submenu-popup-curve";
+  }
+
+  const selectedKeys = pathname.substr(1);
+  const defaultOpenKeys = selectedKeys.split("/")[1];
   return (
     <Menu
-      defaultOpenKeys={["defaultOpenKeys"]}
-      selectedKeys={["selectedKeys"]}
+      defaultOpenKeys={[defaultOpenKeys]}
+      selectedKeys={[selectedKeys]}
       mode="horizontal"
     >
       <Menu.SubMenu
@@ -340,11 +346,6 @@ function HorizontalNav() {
               <IntlMessages id="sidebar.dataDisplay.calender" />
             </AppLink>
           </Menu.Item>
-          {/*<Menu.Item key="components/dataDisplay/list">*/}
-          {/*  <AppLink href="/components/dataDisplay/list">*/}
-          {/*    <IntlMessages*/}
-          {/*      id="sidebar.dataDisplay.list"/></AppLink>*/}
-          {/*</Menu.Item>*/}
           <Menu.Item key="components/dataDisplay/popover">
             <AppLink href="/components/dataDisplay/popover">
               <IntlMessages id="sidebar.dataDisplay.popover" />
@@ -457,7 +458,6 @@ function HorizontalNav() {
           title={
             <span>
               <i className="icon icon-table" />
-
               <IntlMessages id="sidebar.dataDisplay.table" />
             </span>
           }
@@ -572,7 +572,7 @@ function HorizontalNav() {
         key="extensions"
         title={<IntlMessages id="sidebar.extensions" />}
       >
-        <Menu.MenuItemGroup key="map" title={<IntlMessages id="sidebar.map" />}>
+        <Menu.ItemGroup key="map" title={<IntlMessages id="sidebar.map" />}>
           <Menu.SubMenu
             popupClassName="gx-menu-horizontal"
             key="google"
@@ -721,16 +721,9 @@ function HorizontalNav() {
               </AppLink>
             </Menu.Item>
           </Menu.SubMenu>
-        </Menu.MenuItemGroup>
+        </Menu.ItemGroup>
 
-        <Menu.MenuItemGroup
-          key="chart"
-          title={
-            <span>
-              <IntlMessages id="sidebar.chart" />
-            </span>
-          }
-        >
+        <Menu.ItemGroup key="chart" title={<IntlMessages id="sidebar.chart" />}>
           <Menu.SubMenu
             popupClassName="gx-menu-horizontal"
             key="rechart"
@@ -824,7 +817,7 @@ function HorizontalNav() {
               </AppLink>
             </Menu.Item>
           </Menu.SubMenu>
-        </Menu.MenuItemGroup>
+        </Menu.ItemGroup>
 
         <Menu.SubMenu
           popupClassName="gx-menu-horizontal"

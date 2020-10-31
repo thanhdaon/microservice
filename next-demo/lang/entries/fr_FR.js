@@ -1,11 +1,11 @@
 import antdSA from "antd/lib/locale-provider/fr_FR";
-import saMessages from "../locales/fr_FR.json";
+import saMessages from "lang/locales/fr_FR.json";
 
 const saLang = {
   messages: {
-    ...saMessages
+    ...saMessages,
   },
   antd: antdSA,
-  locale: 'fr-FR',
+  locale: "fr-FR",
 };
 export default saLang;

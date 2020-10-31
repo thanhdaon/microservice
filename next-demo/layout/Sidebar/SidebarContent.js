@@ -1,32 +1,41 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Menu } from "antd";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
 
 import SidebarLogo from "layout/Sidebar/SidebarLogo";
-import UserProfile from "layout/Sidebar/UserProfile";
-import AppsNavigation from "layout/Sidebar/AppsNavigation";
-
 import IntlMessages from "components/IntlMessage";
 
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
+import { SettingActions } from "app-redux/settings";
 
-const SidebarContent = () => {
+function SidebarContent() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const pathname = useSelector((state) => state.settings.pathname);
+
+  useEffect(() => {
+    dispatch(SettingActions.setPathname(router.pathname));
+  }, [router.pathname]);
+
+  const selectedKeys = pathname.substr(1);
+  const defaultOpenKeys = selectedKeys.split("/")[1];
   return (
     <>
       <SidebarLogo />
       <div className="gx-sidebar-content">
-        <div className="gx-sidebar-notifications">
-          <UserProfile />
-          <AppsNavigation />
-        </div>
-        <Menu selectedKeys={["1"]} theme="dark" mode="inline">
-          <MenuItemGroup
+        <Menu
+          defaultOpenKeys={[defaultOpenKeys]}
+          selectedKeys={[selectedKeys]}
+          theme="dark"
+          mode="inline"
+        >
+          <Menu.ItemGroup
             key="main"
             className="gx-menu-group"
             title={<IntlMessages id="sidebar.main" />}
           >
-            <SubMenu
+            <Menu.SubMenu
               key="dashboard"
               title={
                 <span>
@@ -67,7 +76,7 @@ const SidebarContent = () => {
                   </a>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
             <Menu.Item key="main/widgets">
               <Link href="/main/widgets">
@@ -101,9 +110,9 @@ const SidebarContent = () => {
                 </a>
               </Link>
             </Menu.Item>
-          </MenuItemGroup>
+          </Menu.ItemGroup>
 
-          <MenuItemGroup
+          <Menu.ItemGroup
             key="in-built-apps"
             className="gx-menu-group"
             title={<IntlMessages id="sidebar.inBuiltApp" />}
@@ -151,9 +160,9 @@ const SidebarContent = () => {
                 </a>
               </Link>
             </Menu.Item>
-          </MenuItemGroup>
+          </Menu.ItemGroup>
 
-          <MenuItemGroup
+          <Menu.ItemGroup
             key="social-apps"
             className="gx-menu-group"
             title={<IntlMessages id="sidebar.social" />}
@@ -179,14 +188,14 @@ const SidebarContent = () => {
                 </a>
               </Link>
             </Menu.Item>
-          </MenuItemGroup>
+          </Menu.ItemGroup>
 
-          <MenuItemGroup
+          <Menu.ItemGroup
             key="components"
             className="gx-menu-group"
             title={<IntlMessages id="sidebar.components" />}
           >
-            <SubMenu
+            <Menu.SubMenu
               key="general"
               title={
                 <span>
@@ -211,9 +220,9 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
-            <SubMenu
+            <Menu.SubMenu
               key="navigation"
               title={
                 <span>
@@ -266,9 +275,9 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
-            <SubMenu
+            <Menu.SubMenu
               key="data-entry"
               title={
                 <span>
@@ -398,9 +407,9 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
-            <SubMenu
+            <Menu.SubMenu
               key="data-display"
               title={
                 <span>
@@ -454,11 +463,7 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-              {/*<Menu.Item key="components/data-display/list">*/}
-              {/*  <Link href="/components/data-display/list">*/}
-              {/*    <span><IntlMessages*/}
-              {/*      id="sidebar.dataDisplay.list"/></span></a></Link>*/}
-              {/*</Menu.Item>*/}
+
               <Menu.Item key="components/data-display/popover">
                 <Link href="/components/data-display/popover">
                   <span>
@@ -501,9 +506,9 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
-            <SubMenu
+            <Menu.SubMenu
               key="feedBack"
               title={
                 <span>
@@ -563,9 +568,9 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
-            <SubMenu
+            <Menu.SubMenu
               key="others"
               title={
                 <span>
@@ -597,9 +602,9 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
-            <SubMenu
+            <Menu.SubMenu
               key="table"
               title={
                 <span>
@@ -625,10 +630,10 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
-          </MenuItemGroup>
+            </Menu.SubMenu>
+          </Menu.ItemGroup>
 
-          <MenuItemGroup
+          <Menu.ItemGroup
             key="extra-components"
             className="gx-menu-group"
             title={<IntlMessages id="sidebar.extraComponents" />}
@@ -641,7 +646,7 @@ const SidebarContent = () => {
                 </a>
               </Link>
             </Menu.Item>
-            <SubMenu
+            <Menu.SubMenu
               key="editor"
               title={
                 <span>
@@ -657,7 +662,7 @@ const SidebarContent = () => {
                   <IntlMessages id="sidebar.editors.CKEditor" />
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
             <Menu.Item key="extra-components/color-picker">
               <Link href="/extra-components/color-picker">
@@ -706,7 +711,7 @@ const SidebarContent = () => {
               </Link>
             </Menu.Item>
 
-            <SubMenu
+            <Menu.SubMenu
               key="time-line"
               title={
                 <span>
@@ -738,7 +743,7 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
             <Menu.Item key="extra-components/shuffle">
               <Link href="/extra-components/shuffle">
@@ -750,14 +755,14 @@ const SidebarContent = () => {
                 </a>
               </Link>
             </Menu.Item>
-          </MenuItemGroup>
+          </Menu.ItemGroup>
 
-          <MenuItemGroup
+          <Menu.ItemGroup
             key="extensions"
             className="gx-menu-group"
             title={<IntlMessages id="sidebar.extensions" />}
           >
-            <SubMenu
+            <Menu.SubMenu
               key="map"
               title={
                 <span>
@@ -768,7 +773,7 @@ const SidebarContent = () => {
                 </span>
               }
             >
-              <SubMenu
+              <Menu.SubMenu
                 key="google"
                 title={
                   <span>
@@ -863,9 +868,9 @@ const SidebarContent = () => {
                     </span>
                   </Link>
                 </Menu.Item>
-              </SubMenu>
+              </Menu.SubMenu>
 
-              <SubMenu
+              <Menu.SubMenu
                 key="ammap"
                 title={
                   <span>
@@ -967,10 +972,10 @@ const SidebarContent = () => {
                     </span>
                   </Link>
                 </Menu.Item>
-              </SubMenu>
-            </SubMenu>
+              </Menu.SubMenu>
+            </Menu.SubMenu>
 
-            <SubMenu
+            <Menu.SubMenu
               key="chart"
               title={
                 <span>
@@ -981,7 +986,7 @@ const SidebarContent = () => {
                 </span>
               }
             >
-              <SubMenu
+              <Menu.SubMenu
                 key="recharts"
                 title={
                   <span>
@@ -1055,9 +1060,9 @@ const SidebarContent = () => {
                     </span>
                   </Link>
                 </Menu.Item>
-              </SubMenu>
+              </Menu.SubMenu>
 
-              <SubMenu
+              <Menu.SubMenu
                 key="amchart"
                 title={
                   <span>
@@ -1103,16 +1108,16 @@ const SidebarContent = () => {
                     </span>
                   </Link>
                 </Menu.Item>
-              </SubMenu>
-            </SubMenu>
-          </MenuItemGroup>
+              </Menu.SubMenu>
+            </Menu.SubMenu>
+          </Menu.ItemGroup>
 
-          <MenuItemGroup
+          <Menu.ItemGroup
             key="custom-views"
             className="gx-menu-group"
             title={<IntlMessages id="sidebar.customViews" />}
           >
-            <SubMenu
+            <Menu.SubMenu
               key="user-auth"
               title={
                 <span>
@@ -1158,9 +1163,9 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
-            <SubMenu
+            <Menu.SubMenu
               key="list-type"
               title={
                 <span>
@@ -1192,9 +1197,9 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
-            <SubMenu
+            <Menu.SubMenu
               key="eCommerce"
               title={
                 <span>
@@ -1219,9 +1224,9 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
-            <SubMenu
+            <Menu.SubMenu
               key="error-pages"
               title={
                 <span>
@@ -1246,9 +1251,9 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+            </Menu.SubMenu>
 
-            <SubMenu
+            <Menu.SubMenu
               key="extras"
               title={
                 <span>
@@ -1281,13 +1286,12 @@ const SidebarContent = () => {
                   </span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
-          </MenuItemGroup>
+            </Menu.SubMenu>
+          </Menu.ItemGroup>
         </Menu>
       </div>
     </>
   );
-};
+}
 
-SidebarContent.propTypes = {};
 export default SidebarContent;

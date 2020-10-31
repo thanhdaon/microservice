@@ -1,4 +1,4 @@
-import zhMessages from "../locales/zh-Hans.json";
+import zhMessages from "lang/locales/zh-Hans.json";
 
 const ZhLan = {
   messages: {

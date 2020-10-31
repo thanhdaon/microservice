@@ -1,18 +1,19 @@
-import React, { useState } from "react";
-import { Button, Dropdown, Layout, Menu, message, Popover } from "antd";
+import React from "react";
 import Link from "next/link";
+import { Button, Dropdown, Layout, Menu, message, Popover } from "antd";
 import Icon from "@ant-design/icons";
+
 import { useDispatch, useSelector } from "react-redux";
 
+import CustomScrollbars from "components/CustomScrollbars";
 import SearchBox from "components/SearchBox";
 import UserInfo from "components/UserInfo";
 import AppNotification from "components/AppNotification";
 import MailNotification from "components/MailNotification";
 import HorizontalNav from "layout/Topbar/HorizontalNav";
-import IntlMessages from "components/IntlMessage";
 
 import { SettingActions } from "app-redux/settings";
-import languages from "layout/Topbar/languageData";
+import languages from "layout/Topbar/languages";
 
 const menu = (
   <Menu onClick={() => message.info("Click on menu item.")}>
@@ -24,42 +25,28 @@ const menu = (
 
 function TopBar() {
   const dispatch = useDispatch();
-  const { locale, navCollapsed } = useSelector((state) => state.settings);
+  const locale = useSelector((state) => state.settings.locale);
+  const navCollapsed = useSelector((state) => state.settings.navCollapsed);
 
   const languageMenu = () => (
-    <ul className="gx-sub-popover">
-      {languages.map((language) => (
-        <li
-          className="gx-media gx-pointer"
-          key={JSON.stringify(language)}
-          onClick={(e) => dispatch(SettingActions.switchLanguage(language))}
-        >
-          <i className={`flag flag-24 gx-mr-2 flag-${language.icon}`} />
-          <span className="gx-language-text">{language.name}</span>
-        </li>
-      ))}
-    </ul>
+    <CustomScrollbars className="gx-popover-lang-scroll">
+      <ul className="gx-sub-popover">
+        {languages.map((language) => (
+          <li
+            className="gx-media gx-pointer"
+            key={language.languageId}
+            onClick={(e) => dispatch(SettingActions.switchLanguage(language))}
+          >
+            <i className={`flag flag-24 gx-mr-2 flag-${language.icon}`} />
+            <span className="gx-language-text">{language.name}</span>
+          </li>
+        ))}
+      </ul>
+    </CustomScrollbars>
   );
 
   return (
     <div className="gx-header-horizontal gx-header-horizontal-dark gx-inside-header-horizontal">
-      <div className="gx-header-horizontal-top">
-        <div className="gx-container">
-          <div className="gx-header-horizontal-top-flex">
-            <div className="gx-header-horizontal-top-left">
-              <i className="icon icon-alert gx-mr-3" />
-              <p className="gx-mb-0 gx-text-truncate">
-                <IntlMessages id="app.announced" />
-              </p>
-            </div>
-            <ul className="gx-login-list">
-              <li>Login</li>
-              <li>Signup</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
       <Layout.Header className="gx-header-horizontal-main">
         <div className="gx-container">
           <div className="gx-header-horizontal-main-flex">
