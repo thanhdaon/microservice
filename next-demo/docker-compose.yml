@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  dashboard:
+    image: "daongocthanh/demo-next"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend_dashboard.rule=Host(`dashboard.gr2.just4demo.live`)"
+      - "traefik.http.services.frontend_dashboard.loadbalancer.server.port=3000"
