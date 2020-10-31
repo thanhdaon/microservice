@@ -5,7 +5,7 @@ module.exports = {
       "./components/**/*.{js,ts,jsx,tsx}",
       "./pages/**/*.{js,ts,jsx,tsx}",
       "./layout/**/*.{js,ts,jsx,tsx}",
-      "./node_modules/antd/**/*.{js,ts,jsx,tsx,css}",
+      "./node_modules/antd/**/*.{js,ts,jsx,tsx,css,less}",
     ],
   },
   future: {
