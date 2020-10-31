@@ -9,7 +9,9 @@ RUN yarn build
 FROM mhart/alpine-node:12.19.0
 WORKDIR /app
 COPY src/package.json /app/package.json
-RUN yarn install --production
+COPY src/yarn.lock /app/yarn.lock
+ENV NODE_ENV=production
+RUN yarn install --prod
 
 FROM mhart/alpine-node:slim-12.19.0
 WORKDIR /app
